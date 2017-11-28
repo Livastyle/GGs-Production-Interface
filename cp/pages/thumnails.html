@@ -1,0 +1,1122 @@
+<div id="tn-topbar" >
+	<div id="tn-topbar-list-options" class="tn-topbar-options">
+		<input type="checkbox" id="create_thumbnails" value="1" />
+		<button onclick="tnDrawThumbnail(false);">Generate</button>
+		<button onclick="tnDelete(true);">Delete All</button>
+		<button onclick="tnRefreshTnList();">Refresh list</button>
+	</div>
+	<div id="tn-topbar-template-options" class="tn-topbar-options">
+		<button onclick="tnSave();">Save</button>
+		<button>Import</button>
+		<button>Export</button>
+	</div>
+	<div class="right">
+		<button onclick="tnOpenTab('list');">List</button>
+		<button onclick="tnOpenTab('settings');">Settings</button>
+		<button onclick="tnOpenTab('template');">Template</button>
+	</div>
+	<div class="clear"></div>
+</div>
+
+<div id="tn-list" class="tn-tab">
+	<div id="tn-list-cont">
+	
+	</div>
+</div>
+<div id="tn-settings" class="tn-tab">
+	<button id="tn-set-responsible-tngen-btn" onclick="tnSetGeneratorClient(true);">This client is responsible for TN creation</button>
+</div>
+<div id="tn-template" class="tn-tab">
+	<div id="tn-template-top">
+		<div id="tn-template-preview" class="unselectable">
+			<canvas width="1920" height="1080" id="tn-preview"></canvas>
+			<canvas width="1920" height="1080" id="tn-preview-overlay"></canvas>
+		</div>
+		<div id="tn-template-preview-stats"></div>
+		<div id="tn-template-layer">
+			<div id="tn-template-layer-list"></div>
+			<div id="tn-template-layer-options">
+				<button onclick="addTnLayer();">Add Layer</button>
+				<select id="tn-add-layer-type-select">
+					<option value="text">Text Field</option>
+					<option value="character">Character potrait</option>
+					<option value="image">Image</option>
+				</select>
+				<input type="file" id="tn-add-layer-image-file" onchange="addTnLayer();" style="display:none" />
+			</div>
+		</div>
+	</div>
+	
+	<div id="tn-template-options">
+
+		<fieldset>
+			<legend>General</legend>
+			<div id="tn-layer-options-general">
+				<table cellpadding="0" cellspacing="0" width="100%"></table>
+			</div>
+			<div>
+				<button onclick="tnLayerFitTo('screen');">Fit to screen</button>
+				<button onclick="tnLayerFitTo('selection');">Fit to selection</button>
+			</div>
+		</fieldset>
+		<fieldset>
+			<legend>Element specific</legend>
+			<div id="tn-layer-options-specific">
+				<table cellpadding="0" cellspacing="0" width="100%"></table>
+			</div>
+		</fieldset>
+		
+	</div>
+	
+</div>
+
+
+<script type="text/javascript">
+
+
+var scriptTag = document.getElementsByTagName('script');
+scriptTag = scriptTag[scriptTag.length - 1];
+$(scriptTag.parentNode).on('opened', function(){
+	tnOpenTab();
+});
+
+var tnDrawClient = false;
+
+var tnTemplate = [];
+var tnTemplateLayerList = [];
+
+var tnSelectedLayerIndex = -1;
+var tnImageUploadTempBase64String;
+var tnImageUploadTempImage;
+var tnCanvasOverlay = document.getElementById("tn-preview-overlay");
+var tnPreviewOverlayRect = {active:false,started:false,start:{x:0,y:0},end:{x:0,y:0}};
+var tnPreviousTnCreateString = "";
+
+
+$(window).on('drawthumbnail', function(data){
+	if(tnDrawClient)
+		tnDrawThumbnail(true);
+});
+
+
+
+
+var tnLayerOptionStruture = {
+	"general": {
+		"label":{
+			"label":"Label",
+			"type":"text",
+			"readonly":false,
+			"path":"label"
+		},
+		"type":{
+			"label":"Type",
+			"type":"text",
+			"readonly":true,
+			"path":"type"
+		},
+		"width":{
+			"label":"Width",
+			"type":"number",
+			"readonly":false,
+			"path":"size.w"
+		},
+		"height":{
+			"label":"Height",
+			"type":"number",
+			"readonly":false,
+			"path":"size.h"
+		},
+		"left":{
+			"label":"Left",
+			"type":"number",
+			"readonly":false,
+			"path":"position.x"
+		},
+		"top":{
+			"label":"Top",
+			"type":"number",
+			"readonly":false,
+			"path":"position.y"
+		},
+		"opacity":{
+			"label":"Opacity",
+			"type":"number",
+			"readonly":false,
+			"min":0,
+			"max":100,
+			"path":"opacity"
+		}
+	},
+	"text": {
+		"field":{
+			"label":"Related field",
+			"type":"related",
+			"readonly":false,
+			"path":"params.field"
+		},
+		"text":{
+			"label":"Plane text",
+			"type":"text",
+			"readonly":false,
+			"path":"params.text"
+		},
+		"size":{
+			"label":"Font size",
+			"type":"number",
+			"readonly":false,
+			"path":"params.size"
+		},
+		"color":{
+			"label":"Text color",
+			"type":"text",
+			"readonly":false,
+			"path":"params.color"
+		},
+		"font":{
+			"label":"Font family",
+			"type":"dropdown",
+			"readonly":false,
+			"path":"params.font",
+			"options":["Arial","Verdana","Impact"]
+		},
+		"align":{
+			"label":"Text align",
+			"type":"dropdown",
+			"readonly":false,
+			"path":"params.align",
+			"options":["center","left","right"]
+		},
+		"baseline":{
+			"label":"Text baseline",
+			"type":"dropdown",
+			"readonly":false,
+			"path":"params.baseline",
+			"options":["alphabetic","middle","top","bottom"]
+		},
+		"overflow":{
+			"label":"Text overflow",
+			"type":"dropdown",
+			"readonly":false,
+			"path":"params.overflow",
+			"options":["resize","cut","overflow"]
+		}
+	
+	},
+	"image": {
+		"base64":{
+			"label":"Base 64",
+			"type":"image",
+			"readonly":true,
+			"path":"params.base64"
+		},
+		"resize":{
+			"label":"Resize method",
+			"type":"dropdown",
+			"readonly":false,
+			"path":"params.resize",
+			"options":["contain", "cover", "normal", "no-resize"]
+		},
+		"align":{
+			"label":"Horizontal align",
+			"type":"dropdown",
+			"readonly":false,
+			"path":"params.align",
+			"options":["center","left","right"]
+		},
+		"valign":{
+			"label":"Vertical align",
+			"type":"dropdown",
+			"readonly":false,
+			"path":"params.valign",
+			"options":["middle","top","bottom"]
+		},
+		"flipx":{
+			"label":"Flip X",
+			"type":"checkbox",
+			"readonly":false,
+			"path":"params.flipx",
+		},
+		"flipy":{
+			"label":"Flip Y",
+			"type":"checkbox",
+			"readonly":false,
+			"path":"params.flipy",
+		}
+	},
+	"character": {
+		"iconset":{
+			"label":"Iconset",
+			"type":"iconset",
+			"readonly":false,
+			"path":"params.iconset"
+		},
+		"player":{
+			"label":"Player",
+			"type":"dropdown",
+			"readonly":false,
+			"path":"params.player",
+			"options":["1", "12", "2", "22"]
+		},
+		"resize":{
+			"label":"Resize method",
+			"type":"dropdown",
+			"readonly":false,
+			"path":"params.resize",
+			"options":["contain", "cover", "normal", "no-resize"]
+		},
+		"align":{
+			"label":"Horizontal align",
+			"type":"dropdown",
+			"readonly":false,
+			"path":"params.align",
+			"options":["center","left","right"]
+		},
+		"valign":{
+			"label":"Vertical align",
+			"type":"dropdown",
+			"readonly":false,
+			"path":"params.valign",
+			"options":["middle","top","bottom"]
+		},
+		"flipx":{
+			"label":"Flip X",
+			"type":"checkbox",
+			"readonly":false,
+			"path":"params.flipx",
+		},
+		"flipy":{
+			"label":"Flip Y",
+			"type":"checkbox",
+			"readonly":false,
+			"path":"params.flipy",
+		}
+	}
+	
+	
+};
+
+function tnSetGeneratorClient(state){
+	tnDrawClient = state;
+
+	var stateNum = (state ? "1" : "0");
+	Cookies.set('tngenclient', stateNum, { expires: 30 });
+
+	$("#tn-set-responsible-tngen-btn").prop("disabled", state);
+	if(state)
+		triggerGlobalEvent("disableTnGen", null, true);
+}
+$(window).on("profileloaded", function(){
+	if(Cookies.get('tngenclient') == "1")
+		tnSetGeneratorClient(true);
+});
+$(window).on("disableTnGen", function(){
+	tnSetGeneratorClient(false);
+});
+
+function tnOpenTab(tab){
+	if(tab == undefined)
+		tab = getParameter("tab");
+		if(tab == undefined)
+			tab = "list";
+	var p = getParameter("p");
+	history.pushState(null, null, "?p="+p+"&tab="+tab);
+	$(".tn-tab, .tn-topbar-options").hide();
+	$("#tn-"+tab+", #tn-topbar-"+tab+"-options").show();
+	if(tab == "template"){
+		tnTemplateLayerList = tnTemplate.slice();
+		tnRefreshLayerList();
+		tnPanelResize();
+	}
+	
+}
+
+function tnRefreshTnList(){
+	loadAjax("thumbnaillist", function(data){
+		$("#tn-list-cont").html('');
+		for(index in data.list){
+			var tnitem = data.list[index];
+			var $item = $('<div class="item" onclick="window.open(\'./../'+tnitem.filename+'\');" />');
+			$item.append('<div class="image" style="background-image:url(\'./../'+tnitem.tn_filename+'\');" />');
+			$item.append('<div class="checkbox"><input type="checkbox" value="'+tnitem.id+'" class="tnlistcheckbox" onclick="event.stopPropagation();" /></div>');
+			$item.append('<div class="time">'+tnitem.date+' - '+tnitem.time+'</div>');
+			$item.appendTo("#tn-list-cont");
+		}
+	});
+}
+$(window).on('thumbnaillistchanged profileloaded', tnRefreshTnList);
+
+
+function tnDelete(all){
+	if(!all)
+		all = false;
+	var toRemove = [];
+		
+	$("input.tnlistcheckbox").each( function (k,v) {
+		if($(v).is(":checked") || all)
+			toRemove.push($(v).val());
+	});
+	
+	loadAjax("deletethumbnail", {idlist:toRemove}, function(data){
+		triggerGlobalEvent("thumbnaillistchanged");
+	});
+}
+
+
+function tnPanelResize(){
+	if($("#tn-template").is(":visible")){
+		var w = $("#tn-template").width();
+		var pw = w * 0.8;
+		var h = Math.round((pw/16)*9);
+		var bottomSize = 420;
+		var layerListMinWidth = 100;
+		var wh = $(window).height();
+		if(h > wh - bottomSize){
+			h = wh - bottomSize;
+			pw = Math.round((h*16)/9);
+		}
+		var layerListWidth = w - pw - 10;
+		if(layerListWidth < layerListMinWidth){
+			layerListWidth = layerListMinWidth;
+			pw = w - layerListWidth - 10;
+			h = Math.round((pw/16)*9);
+		}
+		var fh = h + 30;
+		$("#tn-template-top").css({"height":fh+"px"});
+		$("#tn-preview, #tn-preview-overlay, #tn-template-preview").css({"width":pw+"px", "height": h+"px"});
+		$("#tn-template-preview-stats").css({"width":pw+"px"});
+		$("#tn-template-layer").css({"width":(w - pw - 10)+"px","height": fh+"px"});
+	}
+}
+$(window).on('resize', tnPanelResize);
+
+function tnSave(){
+	tnTemplate = tnTemplateLayerList.slice();
+	loadAjax("savethumbnailtemplate", {"theme":profile.theme, "thumbnail":JSON.stringify(tnTemplateLayerList)}, function(data){
+		if(data.success){
+			console.info("Thumbnail template saved");
+		}else{
+			alert("tnSave() error trying to save thumbnail template");
+		}
+	});	
+}
+
+function tnLoad(){
+	$.ajax({url: './../themes/'+profile.theme+'/thumbnail-template.json',
+		dataType: 'json',
+	})
+	.done(function(data){
+		console.info("Thumbnail template loaded");
+		tnTemplate = data;
+		if(getParameter("tab") == "template"){
+			tnTemplateLayerList = tnTemplate.slice();
+			tnRefreshLayerList();
+		}
+	})
+	.fail(function(e1,e2,e3){
+		console.error(e1)
+		console.error(e2)
+	});
+}
+$(window).on('profileloaded', tnLoad);
+
+function tnDrawPreview(){
+	var drawTimer1 = performance.now();
+	var c = document.getElementById("tn-preview");
+	tnCreate(c, tnTemplateLayerList, function(){
+		var statsstring = [];
+		var drawTimer2 = performance.now();
+		statsstring.push("Resolution: "+c.width+" x "+c.height);
+		
+		
+		var ms = Math.round(drawTimer2-drawTimer1);
+		statsstring.push("Rendertime: "+ms+" ms");
+		
+		var templateLength = JSON.stringify(tnTemplateLayerList).length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
+		statsstring.push("Length: "+templateLength);
+		var layerCount = tnTemplateLayerList.length;
+		statsstring.push("Layers: "+layerCount);
+		
+		$("#tn-template-preview-stats").html(statsstring.join('<div class="sep"> | </div>'));
+	})
+}
+$(window).on('scoreboarddatachanged', function (){
+	if($("#tn-template").is(":visible"))
+		tnDrawPreview();
+});
+
+function tnDrawThumbnail(execute){
+	if(execute){ // execute means, this client is responsible for drawing the thumbnail 
+		if(tnTemplate && tnTemplate.length > 0 && vodListItem){
+			var c = document.createElement('canvas');
+			c.width = 1920;
+			c.height = 1080;
+			tnCreate(c, tnTemplate, function(){
+				var data = c.toDataURL("image/jpeg", 0.95);
+				var setID = (vodListItem ? vodListItem.id : vodListItem); // get id from vod list
+				if(tnPreviousTnCreateString == data+setID+profile.theme)
+					return;
+				tnPreviousTnCreateString = data+setID+profile.theme;
+				loadAjax("savethumbnail", {"base64":data, "theme":profile.theme, "setID":setID}, function(data){
+					triggerGlobalEvent("thumbnaillistchanged");
+				});
+			});
+		}
+	}else{
+		triggerGlobalEvent("drawthumbnail");
+	}
+}
+
+function tnCreate(c, layerList, callback){
+	tnPreloadImages(layerList, function(imageList){
+
+		var ctx = c.getContext("2d");
+		// clear all
+		ctx.clearRect(0, 0, c.width, c.height);
+		// make black bg
+		ctx.fillStyle="#000000";
+		ctx.fillRect(0,0,c.width, c.height);
+		
+		for(index in layerList){
+			var layerObj = layerList[index];
+			ctx.globalAlpha = (layerObj.opacity/100);
+			switch(layerObj.type){
+				case "text": tnDrawTextLayer(ctx, layerObj); break;
+				case "character": 
+				case "image": tnDrawImageLayer(ctx, layerObj, imageList[index]); break;
+			}
+			ctx.globalAlpha = 1;
+		}
+		if(callback)
+			callback();
+	});
+}
+
+function tnDrawImageLayer(ctx, layerObj, img){
+	var p = layerObj.params;
+	var s = layerObj.size;
+	var l = layerObj.position;
+	var c = ctx.canvas;
+	
+	if(img == null)
+		return;
+	
+
+	if(p.flipx == 1 || p.flipy == 1){
+		var xMod = (p.flipx == 1 ? -1 : 1);
+		var yMod = (p.flipy == 1 ? -1 : 1);
+		var tc = document.createElement('canvas');
+		tc.width  = img.width;
+		tc.height = img.height;
+		var tctx = tc.getContext("2d");
+		tctx.scale(xMod, yMod);
+		tctx.drawImage(img,0,0,img.width,img.height,0,0,img.width*xMod,img.height*yMod);
+		img = tc;
+	}
+	switch(p.resize){
+		case "no-resize":
+			ctx.drawImage(img,l.x,l.y);
+		break;
+		case "normal":
+			ctx.drawImage(img,0,0,img.width,img.height,l.x,l.y,s.w,s.h);
+		break;
+		case "cover":
+			var imgAspect = img.width / img.height; 
+			var sizeAspect = s.w / s.h; 
+			var src = {x:0,y:0,w:0,h:0};
+			if(imgAspect > sizeAspect){
+				// img is wider
+				src.y = 0;
+				src.h = img.height;
+				src.w = Math.floor(img.height * sizeAspect);
+				switch(p.align){
+					case "center":	src.x = Math.round((img.width - src.w) / 2);	break;
+					case "left":	src.x = 0; 										break;
+					case "right":	src.x = img.width - src.w;						break;
+				}
+			}else{
+				// img is higher
+				src.x = 0;
+				src.w = img.width;
+				src.h = Math.floor(img.width / sizeAspect);
+				switch(p.valign){
+					case "middle":	src.y = Math.round((img.height - src.h) / 2);	break;
+					case "top":		src.y = 0; 										break;
+					case "bottom":	src.y = img.height - src.h;						break;
+				}
+			}
+			ctx.drawImage(img, src.x, src.y, src.w, src.h, l.x, l.y, s.w, s.h);
+		break;
+		case "contain":
+			var imgAspect = img.width / img.height; 
+			var sizeAspect = s.w / s.h; 
+			var src = {x:0,y:0,w:0,h:0};
+			if(imgAspect > sizeAspect){
+				// img is wider
+				src.x = 0;
+				src.w = img.width;
+				src.h = Math.floor(img.width / sizeAspect);
+				switch(p.valign){
+					case "middle":	src.y = Math.round((img.height - src.h) / 2);	break;
+					case "top":		src.y = 0; 										break;
+					case "bottom":	src.y = img.height - src.h;						break;
+				}
+			}else{
+				// img is higher
+				src.y = 0;
+				src.h = img.height;
+				src.w = Math.floor(img.height * sizeAspect);
+				switch(p.align){
+					case "center":	src.x = Math.round((img.width - src.w) / 2);	break;
+					case "left":	src.x = 0; 										break;
+					case "right":	src.x = img.width - src.w;						break;
+				}
+			}
+			ctx.drawImage(img, src.x, src.y, src.w, src.h, l.x, l.y, s.w, s.h);
+		break;
+	}
+
+
+// ["contain", "cover", "normal", "no-resize"]
+	
+}
+function tnDrawTextLayer(ctx, layerObj){
+	var p = layerObj.params;
+	var s = layerObj.size;
+	var l = layerObj.position;
+	
+	var text = p.text;
+	if(p.field && p.field != 0 && deep_value(profile.scoreboarddata, p.field) != undefined){
+		text = deep_value(profile.scoreboarddata, p.field);
+	}
+	
+	var textBaselineLocation = 0;
+	var textAnkerLocation = 0;
+	
+	// get Y location for baseline (textBaselineLocation)
+	switch(p.baseline){
+		case "alphabetic" :
+		case "middle" :
+			textBaselineLocation = l.y + Math.ceil(s.h / 2);
+		break;
+		case "top" :
+			textBaselineLocation = l.y;
+		break;
+		case "bottom" :
+			textBaselineLocation = l.y + s.h;
+		break;
+	}
+	
+	// get X location for text anker point (textAnkerLocation)
+	switch(p.align){
+		case "center" :
+			textAnkerLocation = l.x + Math.ceil(s.w / 2);
+		break;
+		case "left" :
+			textAnkerLocation = l.x;
+		break;
+		case "right" :
+			textAnkerLocation = l.x + s.w;
+		break;
+	}
+
+	ctx.font = p.size + "px " + p.font
+
+	ctx.textAlign = p.align;
+	ctx.textBaseline = p.baseline; 
+	ctx.fillStyle = p.color;
+	
+	// do resizing methods
+	switch(p.overflow){
+		case "resize" :
+			var textW = ctx.measureText(text).width;
+			var textFontDecrease = 1;
+			while(textW > s.w && (p.size - textFontDecrease) > 0){
+				ctx.font = (p.size-textFontDecrease) + "px " + p.font;
+				textW = ctx.measureText(text).width;
+				textFontDecrease++;
+			}
+			ctx.fillText(text, textAnkerLocation, textBaselineLocation); 
+		break;
+		case "cut" :
+			ctx.save();
+			ctx.beginPath();
+			ctx.rect(l.x, l.y, s.w, s.h);
+			ctx.clip();
+			ctx.fillText(text, textAnkerLocation, textBaselineLocation); 
+			ctx.restore();
+		break;
+		case "overflow" :
+			ctx.fillText(text, textAnkerLocation, textBaselineLocation); 
+		break;
+	}
+	
+}
+
+function tnPreloadImages(list, callback){
+	var deferreds = {};
+	var imageList = {};
+	for(index in list){
+		var layerObj = list[index];
+		if(layerObj.type == "image" || layerObj.type == "character"){
+			var deferred = $.Deferred();
+			var img = new Image();
+			img.onload = function(e){
+				imageList[e.path[0].dataset.index] = e.path[0];
+				deferreds[e.path[0].dataset.index].resolve();
+			};
+			img.onerror = function(e){
+				imageList[e.path[0].dataset.index] = null;
+				deferreds[e.path[0].dataset.index].resolve();
+			};
+			img.dataset.index = index;
+			if(layerObj.type == "image"){
+				img.src = layerObj.params.base64;
+			}
+			if(layerObj.type == "character"){
+				var assetsPath = './../assets/characters/thumbnail/'+_game+'/'+layerObj.params.iconset+'/';
+				var po = profile.scoreboarddata.player[layerObj.params.player];
+
+				if(po && po.character && po.character.cid)
+					img.src = assetsPath+po.character.cid+".png";
+				else
+					img.src = "";
+			}
+			deferreds[index] = deferred;
+		}
+	}
+	
+	var deferredsArr = Object.keys(deferreds).map(function (key) { return deferreds[key]; }); // do I need that ?
+	$.when.apply(null, deferredsArr).done(function() {
+		callback(imageList);
+	});
+}
+
+
+tnCanvasOverlay.addEventListener("mousemove",function(e){
+	// get native position
+	var widthRatio = $(tnCanvasOverlay).width() / tnCanvasOverlay.width;
+	var heightRatio = $(tnCanvasOverlay).height() / tnCanvasOverlay.height;
+	
+	var trueX = Math.round(e.offsetX / widthRatio);
+	var trueY = Math.round(e.offsetY / heightRatio);
+	trueX = (trueX < 0 ? 0 : trueX);
+	trueY = (trueY < 0 ? 0 : trueY);
+	trueX = (trueX > tnCanvasOverlay.width ? tnCanvasOverlay.width : trueX);
+	trueY = (trueY > tnCanvasOverlay.height ? tnCanvasOverlay.height : trueY);
+	
+	if(e.buttons == 1 && e.button == 0){
+		if(!tnPreviewOverlayRect.started){
+			tnPreviewOverlayRect.start.x = trueX;
+			tnPreviewOverlayRect.start.y = trueY;
+			tnPreviewOverlayRect.started = true;
+			tnPreviewOverlayRect.active = true;
+		}
+		tnPreviewOverlayRect.end.x = trueX;
+		tnPreviewOverlayRect.end.y = trueY;
+		
+	}else{
+		tnPreviewOverlayRect.started = false;
+		
+		if(tnPreviewOverlayRect.end.x < tnPreviewOverlayRect.start.x){
+			var tmp = tnPreviewOverlayRect.end.x;
+			tnPreviewOverlayRect.end.x = tnPreviewOverlayRect.start.x;
+			tnPreviewOverlayRect.start.x = tmp;
+		}		
+		if(tnPreviewOverlayRect.end.y < tnPreviewOverlayRect.start.y){
+			var tmp = tnPreviewOverlayRect.end.y;
+			tnPreviewOverlayRect.end.y = tnPreviewOverlayRect.start.y;
+			tnPreviewOverlayRect.start.y = tmp;
+		}
+	}
+	
+	tnDisplayPreviewOverlay();
+});
+tnCanvasOverlay.addEventListener("mousedown",function(e){
+	tnPreviewOverlayRect.active = false;
+	tnDisplayPreviewOverlay();
+});
+
+function tnDisplayPreviewOverlay(){
+
+	var x = tnPreviewOverlayRect.start.x;
+	var y = tnPreviewOverlayRect.start.y;
+	var w = tnPreviewOverlayRect.end.x - tnPreviewOverlayRect.start.x;
+	var h = tnPreviewOverlayRect.end.y - tnPreviewOverlayRect.start.y;
+
+	var ctx = tnCanvasOverlay.getContext("2d");
+	ctx.clearRect(0, 0, tnCanvasOverlay.width, tnCanvasOverlay.height);
+	if(w != 0 && h != 0 && tnPreviewOverlayRect.active){
+		ctx.beginPath();
+		ctx.strokeStyle = '#ffffff';	
+		ctx.fillStyle="rgba(0,0,0,0.1)";	
+		ctx.rect(tnPreviewOverlayRect.start.x, tnPreviewOverlayRect.start.y, tnPreviewOverlayRect.end.x - tnPreviewOverlayRect.start.x, tnPreviewOverlayRect.end.y - tnPreviewOverlayRect.start.y);
+		ctx.fill();
+		ctx.stroke();
+		
+		var textX = tnPreviewOverlayRect.start.x + 5;
+		var textY = tnPreviewOverlayRect.start.y + 20;
+		if(textX > tnCanvasOverlay.width){
+			textX = tnPreviewOverlayRect.start.x - 55;
+		}
+		
+		ctx.font = "14px Arial";
+		ctx.fillStyle="#ffffff";
+		ctx.fillText(w+" x "+h,textX,textY);
+	}
+	
+	if(tnSelectedLayerIndex > -1){
+		// draw box
+		
+		var layerObj = tnTemplateLayerList[tnSelectedLayerIndex];
+		ctx.beginPath();
+		ctx.rect(layerObj.position.x, layerObj.position.y, layerObj.size.w, layerObj.size.h);
+		ctx.strokeStyle = '#00eeff';
+		ctx.stroke();
+	}
+}
+
+function tnRefreshLayerList(){
+	$("#tn-template-layer-list").html('');
+	for(index in tnTemplateLayerList){
+		var layerObj = tnTemplateLayerList[index];
+		var $item = $('<div class="item item-'+layerObj.type+'" id="tn-template-layerlist-item-'+index+'" onclick="tnOpenLayerOptions('+index+');" />');
+		$item.append('<div class="indicator"></div>');
+		$item.append('<div class="label">'+layerObj.label+'</div>');
+		$item.append('<div class="options">'+
+		'<button class="dublicate" onclick="tnLayerDoublicate('+index+');event.stopPropagation();"></button>'+
+		'<button class="up" onclick="tnLayerMove('+index+',1);event.stopPropagation();"></button>'+
+		'<button class="down" onclick="tnLayerMove('+index+',-1);event.stopPropagation();"></button>'+
+		'<button class="remove" onclick="tnLayerDelete('+index+');event.stopPropagation();"></button>'+
+		'</div>');
+		$item.prependTo("#tn-template-layer-list");
+	}
+	if(tnSelectedLayerIndex > -1)
+		$("#tn-template-layerlist-item-"+tnSelectedLayerIndex).click();
+	tnDrawPreview();
+}
+
+function tnLayerMove(layerIndex, movement){
+	var toIndex = layerIndex + movement;
+	if(toIndex < 0 || toIndex >= tnTemplateLayerList.length)
+		return;
+	if((tnSelectedLayerIndex >= toIndex && tnSelectedLayerIndex <= layerIndex) || (tnSelectedLayerIndex >= layerIndex && tnSelectedLayerIndex <= toIndex))
+		if(tnSelectedLayerIndex == layerIndex)
+			tnSelectedLayerIndex = toIndex;
+		else
+			tnSelectedLayerIndex += (layerIndex < toIndex ? -1 : 1);
+	tnTemplateLayerList.splice(toIndex, 0, tnTemplateLayerList.splice(layerIndex, 1)[0]);
+	tnRefreshLayerList();
+}
+
+function tnLayerDelete(layerIndex){
+	if(tnSelectedLayerIndex == layerIndex){
+		tnSelectedLayerIndex = -1;
+		tnDisplayPreviewOverlay();
+	}
+	tnTemplateLayerList.splice(layerIndex, 1);
+	tnRefreshLayerList();
+}
+
+function tnLayerDoublicate(layerIndex){
+	var copy = JSON.parse(JSON.stringify(tnTemplateLayerList[layerIndex]));
+	
+	copy.label = tnGetLayerName(copy.label);
+	
+	tnTemplateLayerList.splice(layerIndex+1, 0, copy);
+	tnRefreshLayerList();
+}
+
+function tnOpenLayerOptions(index){
+	var layerObj = tnTemplateLayerList[index];
+	tnSelectedLayerIndex = index;
+	$("#tn-template-layer-list .item").removeClass("selected");
+	$("#tn-template-layerlist-item-"+index).addClass("selected");
+	$("#tn-layer-options-general table, #tn-layer-options-specific table").html('');
+
+	for(layerOptionType in tnLayerOptionStruture){
+		if(layerOptionType == "general" || layerOptionType == layerObj.type){
+			for(layerOptionIndex in tnLayerOptionStruture[layerOptionType]){
+
+				var layerOption = tnLayerOptionStruture[layerOptionType][layerOptionIndex];
+				$item = $('<tr></tr>');
+				$item.append('<th>'+layerOption.label+'</th>');
+				
+				var inputElement;
+				var inputElementID = "tn-layer-options-"+layerOption.path.split('.').join('-');
+				if(layerOption.type == 'dropdown'){
+					inputElement = '<select onchange="tnLayerOptionChanged('+index+', this, \''+layerOption.path+'\')" id="'+inputElementID+'">';
+					for(dropdownOptionIndex in layerOption.options)
+						inputElement += '<option'+(layerOption.options[dropdownOptionIndex] == deep_value(layerObj, layerOption.path) ? ' selected' : '')+'>'+layerOption.options[dropdownOptionIndex]+'</option>';
+					inputElement += '</select>';
+				}else if(layerOption.type == 'related'){
+					inputElement = '<select onchange="tnLayerOptionChanged('+index+', this, \''+layerOption.path+'\')" id="'+inputElementID+'">';
+					inputElement += '<option value="0"> - Plane text - </option>';
+					inputElement += tnGetRealtedFieldOptions(profile.scoreboarddata);
+					inputElement += '</select>';
+				}else if(layerOption.type == 'iconset'){
+					inputElement = '<select onchange="tnLayerOptionChanged('+index+', this, \''+layerOption.path+'\')" id="'+inputElementID+'">';
+					inputElement += tnGetIconsetOptions();
+					inputElement += '</select>';
+				}else if(layerOption.type == 'image'){
+					inputElement = deep_value(layerObj, layerOption.path).length;
+				}else if(layerOption.type == 'checkbox'){
+				
+					inputElement = '<input type="checkbox" '+(deep_value(layerObj, layerOption.path) == 1 ? 'CHECKED' : '')+' onchange="tnLayerOptionChanged('+index+', this, \''+layerOption.path+'\')" id="'+inputElementID+'" value="1" />';
+				
+				}else if(layerOption.type == 'number'){
+					inputElement = '<input type="number" '+(layerOption.readonly ? ' readonly' : '')+' oninput="tnLayerOptionChanged('+index+', this, \''+layerOption.path+'\')" id="'+inputElementID+'" value="'+deep_value(layerObj, layerOption.path)+'" />';
+					if(layerOption.min != undefined && layerOption.max != undefined){
+						inputElement += '<input id="'+inputElementID+'-range" oninput="document.getElementById(\''+inputElementID+'\').value = this.value;" onchange="document.getElementById(\''+inputElementID+'\').oninput();" min="'+layerOption.min+'" max="'+layerOption.max+'" type="range"/>';
+					}
+					if(layerOption.path == 'position.x' || layerOption.path == 'position.y' || layerOption.path == 'size.w' || layerOption.path == 'size.h'){
+						inputElement += '<button onclick="tnSetSelectionValue(\''+inputElementID+'\', \''+layerOption.path+'\');">SET</button>';
+					}
+				}else{
+					// plane text
+					inputElement = '<input type="text" '+(layerOption.readonly ? ' readonly' : '')+' oninput="tnLayerOptionChanged('+index+', this, \''+layerOption.path+'\')" id="'+inputElementID+'" value="'+deep_value(layerObj, layerOption.path)+'" />';
+				}
+				
+				$item.append('<td>'+inputElement+'</td>');
+				
+				if(layerOptionType == "general"){
+					$item.appendTo("#tn-layer-options-general table");
+				}else{
+					$item.appendTo("#tn-layer-options-specific table");
+				}
+			}
+		}
+	}
+	
+	
+	tnDisplayPreviewOverlay();
+}
+
+function tnLayerFitTo(value){
+	var x,y,w,h;
+	switch(value){
+		case "screen":
+			var c = document.getElementById("tn-preview");
+			x = 0;
+			y = 0;
+			h = c.height;
+			w = c.width;
+		break;
+		case "selection":
+			var r = tnPreviewOverlayRect;
+			if(!r.active)
+				return;
+			x = r.start.x;
+			y = r.start.y;
+			w = r.end.x - r.start.x;	
+			h = r.end.y - r.start.y;	
+		break;
+	}
+	$("#tn-layer-options-position-x").val(x).trigger("oninput");
+	$("#tn-layer-options-position-y").val(y).trigger("oninput");
+	$("#tn-layer-options-size-w").val(w).trigger("oninput");
+	$("#tn-layer-options-size-h").val(h).trigger("oninput");
+}
+
+function tnSetSelectionValue(inputId, path){
+	var r = tnPreviewOverlayRect;
+	if(r.active){
+		var value;
+		switch(path){
+			case "position.x":	value = r.start.x;	break;
+			case "position.y":	value = r.start.y;	break;
+			case "size.w":		value = r.end.x - r.start.x;	break;
+			case "size.h":		value = r.end.y - r.start.y;	break;
+		}
+		$("#"+inputId).val(value).trigger("oninput");
+	}
+}
+
+function tnGetRealtedFieldOptions(obj, prev){
+	if(prev == undefined)
+		prev = "";
+	var html = '';
+	for(index in obj){
+		var sbField = obj[index];
+		var path = prev+(prev.length == 0 ? '' : '.')+index;
+		if(typeof(sbField) == "object"){
+			html += tnGetRealtedFieldOptions(sbField, path);
+		}else{
+			html += '<option>'+path+'</option>';	
+		}
+	}
+	return html;
+}
+
+function tnGetIconsetOptions(){
+	// TODO: fix list and make dynamic
+	return '<option value="default">default</option>';
+}
+
+function tnLayerOptionChanged(layerIndex, element, path){
+	var value = element.value;
+	if(element.type == "number"){
+		value = parseInt(value);
+	}
+	if(element.type == "checkbox"){
+		value = (element.checked ? 1 : 0);
+	}
+	deep_value_set(tnTemplateLayerList[layerIndex], path, value);
+
+	if(path == "label"){
+		$("#tn-template-layerlist-item-"+layerIndex+" .label").text(value);
+	}
+	
+	tnDisplayPreviewOverlay();
+	tnDrawPreview();
+}
+
+function addTnLayer(){
+	var type = $("#tn-add-layer-type-select").val();
+	var imgInput = document.getElementById('tn-add-layer-image-file');
+	if(type == "image" && imgInput.files.length == 0 && !tnImageUploadTempBase64String){ // open file browser if no file is selected yet, and kill script for later restart
+		$("#tn-add-layer-image-file").click();
+		return;
+	}
+	if(type == "image" && imgInput.files.length == 1){
+		var fr = new FileReader();
+		fr.onload = function(e){
+			tnImageUploadTempBase64String = e.target.result;
+			tnImageUploadTempImage = new Image();
+			tnImageUploadTempImage.onload = function(e){
+				imgInput.value = null;
+				addTnLayer();
+			}
+			tnImageUploadTempImage.src = tnImageUploadTempBase64String;
+			
+		};
+		fr.readAsDataURL(imgInput.files[0]); 
+		return;
+	}
+	
+
+	var layerObj = newTnLayer(type);
+
+	
+	
+	if(tnPreviewOverlayRect.active){
+		layerObj.size.w = tnPreviewOverlayRect.end.x - tnPreviewOverlayRect.start.x;
+		layerObj.size.h = tnPreviewOverlayRect.end.y - tnPreviewOverlayRect.start.y;
+		layerObj.position.x = tnPreviewOverlayRect.start.x;
+		layerObj.position.y = tnPreviewOverlayRect.start.y;
+	}else if(type == "image"){
+		layerObj.size.w = tnImageUploadTempImage.width;
+		layerObj.size.h = tnImageUploadTempImage.height;
+		layerObj.position.x = Math.ceil((tnCanvasOverlay.width - tnImageUploadTempImage.width)/2);
+		layerObj.position.y = Math.ceil((tnCanvasOverlay.height - tnImageUploadTempImage.height)/2);
+	}else{
+		layerObj.size.w = 200;
+		layerObj.size.h = 30;
+		layerObj.position.x = Math.ceil(tnCanvasOverlay.width/2) - 100;
+		layerObj.position.y = Math.ceil(tnCanvasOverlay.height/2) - 15;
+	}
+
+	// kill temp image data
+	if(type == "image"){
+		layerObj.params.base64 = tnImageUploadTempBase64String;
+		tnImageUploadTempBase64String = null;
+		tnImageUploadTempImage = null;
+	}
+	
+	tnTemplateLayerList.push(layerObj);	// add layer to layer list
+	tnSelectedLayerIndex = tnTemplateLayerList.length -1; // set selected item to recently added layer
+	tnRefreshLayerList();
+}
+
+function newTnLayer(type){
+
+	var params = null;
+	
+	if(type == "text"){
+		params = {
+			"field":"",				// text field (z.B.: "player.1.name)
+			"text":"Sample Text",				// if "field" is empty or object not accessable, use text. 
+			"size":12,				// starting font size. can become smaller, when resizing
+			"color":"#ffffff",
+			"font":"Arial",
+			"align":"center",		// center, left, right
+			"baseline":"middle",	// top, bottom, middle, alphabetic
+			"overflow":"resize" 	// overflow, cut, resize
+		};
+	}
+	if(type == "character"){
+		params = {
+			"player":"1",
+			"resize":"contain",		// contain, cover, normal (no resize)
+			"align":"center",		// center, left, right
+			"valign":"center",		// middle, top, bottom
+			"iconset":"default"			// which set of icons to use. if empty, use default (TODO: figure out how it will work)
+		};
+	}
+	if(type == "image"){
+		params = {
+			"base64":"",
+			"resize":"normal",		// contain, cover, normal (no resize)
+			"align":"center",		// center, left, right
+			"valign":"center"		// middle, top, bottom
+		};
+	}
+	
+	// create layer name
+	var layerName = tnGetLayerName(type);
+	
+	
+	// build layer object
+	var obj = {
+		"label":	layerName,
+		"type":		type,
+		"size":{
+			w : 0,
+			h : 0
+		},
+		"position":{
+			x : 0,
+			y : 0
+		},
+		"opacity":100,
+		"params":params
+	};
+	return obj;
+}
+function tnGetLayerName(name){
+	var layerNameCounter = 1;
+	var lname = "";
+	do {
+		lname = name+" #"+layerNameCounter;
+		var nameExist = false;
+		for(index in tnTemplateLayerList)
+			if(tnTemplateLayerList[index].label == lname)
+				nameExist = true;
+		layerNameCounter++;
+	}while(nameExist);
+	return lname;
+}
+
+function deep_value(obj, path){
+    for (var i=0, path=path.split('.'), len=path.length; i<len; i++){
+		if(obj[path[i]] == undefined)
+			return null;
+        obj = obj[path[i]];
+    }
+    return obj;
+};
+function deep_value_set(obj, prop, value) {
+    if (typeof prop === "string")
+        prop = prop.split(".");
+
+    if (prop.length > 1) {
+        var e = prop.shift();
+        deep_value_set(obj[e] = Object.prototype.toString.call(obj[e]) === "[object Object]" ? obj[e] : {}, prop, value);
+    } else {
+        obj[prop[0]] = value;
+	}
+}
+
+
+
+</script>

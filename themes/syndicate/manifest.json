@@ -1,0 +1,18 @@
+{"label":"Syndicate","resolution":[1280,720],"casters":3,
+"fields":[
+	{"name":"overlaytop","label":"Lower Third - Top override","type":"text","checkbox":true,"frontpage":true},
+	{"name":"overlaybottom","label":"Lower Third - Bottom override","type":"text","checkbox":true,"frontpage":true},
+	{"name":"staytuned_top","label":"Stay Tuned - Top Text","type":"text","checkbox":false,"frontpage":true},
+	{"name":"staytuned_bottom","label":"Stay Tuned - Bottom Text","type":"text","checkbox":false,"frontpage":true},
+	{"name":"countdown","label":"Stay Tuned - Countdown","type":"text","checkbox":true,"frontpage":true},
+	{"name":"top8_p1","label":"Top8 Player 1","type":"player"},
+	{"name":"top8_p2","label":"Top8 Player 2","type":"player"},
+	{"name":"top8_p3","label":"Top8 Player 3","type":"player"},
+	{"name":"top8_p4","label":"Top8 Player 4","type":"player"},
+	{"name":"top8_p5","label":"Top8 Player 5","type":"player"},
+	{"name":"top8_p6","label":"Top8 Player 6","type":"player"},
+	{"name":"top8_p7","label":"Top8 Player 7","type":"player"},
+	{"name":"top8_p8","label":"Top8 Player 8","type":"player"}
+],
+
+"note":"Layout for Syndicate","ver":"0.1"}

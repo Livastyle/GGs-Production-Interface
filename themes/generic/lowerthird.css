@@ -1,0 +1,353 @@
+
+
+@font-face{
+	font-family: GeoSlab;
+	src: url('GeoSlab.otf');
+}
+
+
+#main {
+	position:absolute;
+	left:0px;
+	bottom:0px;
+	right:0px;
+	top:0px;
+}
+
+#field {
+	position:absolute;
+	left:0px;
+	bottom:0px;
+}
+#inner {
+	position:absolute;
+	left:110px;
+	bottom:80px;
+	width:520px;
+	height:90px;
+	transform:skewX(20deg);
+}
+
+.fi {
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	width:16px;
+	transform:scaleY(0);
+	background:#076173;
+}
+#main.visible .fi {
+	transform:scaleY(1);
+}
+
+#f1 {
+	left:0px;
+	-webkit-filter:brightness(0.6);
+	transition:all .3s 1s;
+}
+#f2 {
+	left:15px;
+	-webkit-filter:brightness(0.8);
+	transition:all .3s 1.15s;
+}
+#f3 {
+	left:30px;
+	-webkit-filter:brightness(1);
+	transition:all .3s 1.3s;
+}
+#f4 {
+	left:60px;
+	-webkit-filter:brightness(1.2);
+	opacity:0;
+	transform:scaleY(1) translateX(0px);
+	transition:all .5s .65s;
+}
+#main.visible #f4 {
+	opacity:1;
+	transform:scaleY(1) translateX(440px);
+	transition:all .5s 1.45s;
+}
+
+#finfo {
+	width:auto;
+	left:45px;
+	right:10px;
+	background: #121212;
+	
+	transform:scaleX(0);
+	transform-origin:0% 50%;
+	transition:all .5s .65s;
+	will-change:transform;
+}
+#main.visible #finfo {
+	
+	transition:all .5s 1.45s;
+	transform:scaleX(1);
+}
+
+#upper {
+	position:absolute;
+	left:160px;
+	bottom:130px;
+	width:400px;
+	font-size:24px;
+	
+	height:34px;
+	line-height:34px;
+	vertical-align:middle;
+	
+	transform:translateX(10px);
+	will-change:transform;
+	opacity:0;
+	transition:all .3s .5s;
+	
+}
+#main.visible #upper {
+	transition:all .2s 1.9s;
+	opacity:1;
+	transform:translateX(0px);
+}
+
+#lower {
+	position:absolute;
+	left:180px;
+	bottom:86px;
+	width:420px;
+	
+	height:46px;
+	line-height:46px;
+	vertical-align:middle;
+	
+	font-size:40px;
+	transform:translateX(10px);
+	will-change:transform;
+	opacity:0;
+	transition:all .3s .4s;
+}
+
+
+#main.visible #lower {
+	transition:all .2s 2s;
+	opacity:1;
+	transform:translateX(0px);
+}
+
+
+#upper span,
+#lower span {
+	opacity:0;
+	transition:opacity .2s;
+}
+
+
+#upper span.visible,
+#lower span.visible {
+	opacity:1;
+}
+
+
+#rightfield {
+	position:absolute;
+	right:-20px;
+	bottom:70px;
+	width:260px;
+	height:60px;
+	background: #121212;
+	transform:skewX(-20deg);
+}
+
+
+
+#timefield {
+	position:absolute;
+	top:0px;
+	right:0px;
+	bottom:0px;
+	width:140px;
+	background: #076173;
+}
+#timesep {
+	position:absolute;
+	top:0px;
+	right:139px;
+	bottom:0px;
+	width:20px;
+	background: #076173;
+	-webkit-filter:brightness(0.7);
+}
+#timevalue {
+	position:absolute;
+	top:4px;
+	left:2px;
+	right:20px;
+	text-align:center;
+	font-family: GeoSlab;
+	font-size:40px;
+	text-shadow:1px 1px 1px rgba(0,0,0,0.5);
+	transform:skewX(20deg);
+}
+#sponsorlogos {
+	position:absolute;
+	left:10px;
+	top:5px;
+	width:80px;
+	height:50px;
+	transform:skewX(20deg);
+}
+#sponsorlogos .item {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	background-size:contain;
+	background-position:50% 50%;
+	background-repeat:no-repeat;
+	opacity:0;
+	transition:all 1s;
+}
+
+#sponsorlogos .item.visible {
+	opacity:1;
+}
+
+
+
+#stagestrike {
+	position:absolute;
+	left:10px;
+	top:10px;
+	opacity:0;
+}
+#stagestrike.visible {
+	opacity:1;
+}
+#stagestrike.visible.done {
+	opacity:0;
+	transition:all 1s 4s;
+}
+#stagestrike_label {
+	position:absolute;
+	left:50px;
+	top:20px;
+	width:400px;
+	padding:10px 0px;
+	background:#222;
+	font-size:24px;
+	font-weight:bold;
+	text-align:center;
+	text-transform:uppercase;
+	transform:skew(20deg);
+	opacity:1;
+	border-left:15px solid #ffb507;
+	transition:all .4s;
+}
+#stagestrike_label:before {
+	content:'';
+	position:absolute;
+	right:-440px;
+	bottom:15px;
+	width:440px;
+	height:26px;
+	background:#ffdf00;
+	transform:scaleX(0);
+	transform-origin:0% 50%;
+	transition:all .3s;
+}
+#stagestrike_label:after {
+	content:'';
+	position:absolute;
+	left:250px;
+	bottom:0px;
+	width:700px;
+	height:15px;
+	background:#222;
+	transform:scaleX(0);
+	transform-origin:0% 50%;
+	transition:all .3s;
+}
+
+#stagestrike.visible:not(.done) #stagestrike_label:before,
+#stagestrike.visible:not(.done) #stagestrike_label:after {
+	transform:scaleX(1);
+}
+
+#stagestrike_label span {
+	display:block;
+	transform:skew(-20deg);
+}
+#stagestrike.done #stagestrike_label {
+	width:270px;
+}
+
+
+#stagestrike_items {
+	position:absolute;
+	left:84px;
+	top:80px;
+}
+
+#stagestrike_items .item {
+	position:absolute;
+	left:-400px;
+	top:10px;
+	width:150px;
+	height:100px;
+	box-shadow:2px 2px 18px rgba(0,0,0,0.5);
+	border-left:15px solid #ffb507;
+	border-right:15px solid #ffdf00;
+	
+	background:#000;
+	overflow:hidden;
+	
+	transform:scale(1) skew(20deg);
+	
+	transition:all .5s;
+	
+}
+
+#stagestrike.visible .item:nth-child(1) {
+	left:0px;
+	transition:transform .5s, left .5s .5s, opacity .5s;
+}
+#stagestrike.visible .item:nth-child(2) {
+	left:220px;
+	transition:transform .5s, left .5s .4s, opacity .5s;
+}
+#stagestrike.visible .item:nth-child(3) {
+	left:440px;
+	transition:transform .5s, left .5s .3s, opacity .5s;
+}
+#stagestrike.visible .item:nth-child(4) {
+	left:660px;
+	transition:transform .5s, left .5s .2s, opacity .5s;
+}
+#stagestrike.visible .item:nth-child(5) {
+	left:880px;
+	transition:transform .5s, left .5s .1s, opacity .5s;
+}
+
+#stagestrike.visible .item.out {
+	transform:scale(0.9) skew(20deg);
+	opacity:0.3;
+}
+#stagestrike.visible.done .item {
+	left:0px;
+	transition:transform .5s, opacity .5s, left .5s 0s;
+}
+#stagestrike.visible.done .item.out {
+	opacity:0;
+}
+
+#stagestrike .item .item-inner {
+	position:absolute;
+	left:-20px;
+	right:-20px;
+	top:0px;
+	bottom:0px;
+	box-shadow:inset 0px 0px 10px #fff;
+	transform:skew(-20deg);
+	background:#eee;
+	background-size:cover;
+	background-position:50% 50%;
+}

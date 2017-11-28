@@ -1,0 +1,62 @@
+
+<div id="player-db-topbar">
+	<button onclick="openPlayerSidePanel(0);">Add Player</button>
+	<button>Import database</button>
+	<input type="text" value="" placeholder="Nickname ..." id="player-database-filter-input" onkeyup="playerDatabaseFilter();" />
+</div>
+
+<div id="playerlist"></div>
+
+<script type="text/javascript">
+
+
+$(window).on('refreshplayerdatabase', function (e) {
+    if(e.state==1){
+		// clear and wait screen
+		$("#playerlist").addClass("loading");
+	}
+    if(e.state==2){
+		playerDatabaseFilter();
+		$("#playerlist").removeClass("loading");
+	}
+});
+
+
+function insertIntoPlayerList(list){
+
+	var $itemTpl = $('<div class="item" onclick="">'+
+		'<div class="item-col-0"></div>'+
+		'<div class="item-col-1"></div>'+
+		'<div class="item-col-2"></div>'+
+		'<div class="item-col-3"></div>'+
+		'<div class="item-col-4"></div>'+
+		'</div>');
+	var frag = document.createDocumentFragment();
+	for(index in list){
+		var playerObj = list[index];
+		var $item = $itemTpl.clone();
+		$item.attr("onclick", "openPlayerSidePanel("+playerObj.id+")");
+		$item.children(".item-col-0").text(playerObj.id);
+		if(playerObj.smashgg > 0)
+			$item.children(".item-col-1").addClass("hasSmashgg");
+		$item.children(".item-col-2").text(playerObj.nickname);
+		$item.children(".item-col-3").text(playerObj.firstname+' '+playerObj.lastname);
+		$item.children(".item-col-4").text(playerObj.countryname).css("background-image","url('./../assets/flags/lowres/"+playerObj.country+".png')");
+		$item.appendTo(frag);
+	}
+	var scrollTop = $("#playerlist").scrollTop();
+	$("#playerlist").html(frag).scrollTop(scrollTop);
+}
+
+function playerDatabaseFilter(){
+	var searchNickname = $("#player-database-filter-input").val().trim().toLowerCase();
+	var list = [];
+	for(index in playerdatabaselist){
+		if(playerdatabaselist[index].nickname.toLowerCase().indexOf(searchNickname) != -1){
+			list.push(playerdatabaselist[index]);
+		}
+	}
+	insertIntoPlayerList(list);
+}
+
+</script>

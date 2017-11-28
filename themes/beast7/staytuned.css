@@ -1,0 +1,75 @@
+@font-face{
+	font-family: 'Alegreya';
+	src: url('Alegreya-Regular.otf');
+}
+
+#upper {
+	position:absolute;
+	left:100px;
+	right:100px;
+	top:70px;
+	line-height:100px;
+	vertical-align:middle;
+	font-size:80px;
+	font-family: 'Alegreya';
+	text-align:center;
+}
+#lower {
+	position:absolute;
+	left:100px;
+	right:100px;
+	top:470px;
+	line-height:100px;
+	vertical-align:middle;
+	font-size:60px;
+	font-family: 'Alegreya';
+	text-align:center;
+}
+
+#lower span,
+#upper span {
+	position:relative;
+	background-image:url('gradient_staytuned.png');
+	background-size:contain;
+	
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	-webkit-filter:brightness(1.1) drop-shadow(0px 0px 7px #000) ;
+}
+
+#countdown {
+	position:absolute;
+	left:100px;
+	right:100px;
+	top:540px;
+	line-height:100px;
+	vertical-align:middle;
+	font-size:50px;
+	font-family: 'Alegreya';
+	text-align:center;
+	opacity:0;
+	transition:all 500ms;
+}
+#countdown.visible {
+	opacity:1;
+}
+#countdown span {
+	position:relative;
+	background-image:url('gradient_staytuned.png');
+	background-size:contain;
+	
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	-webkit-filter:brightness(1.1) drop-shadow(0px 0px 7px #000) ;
+}
+
+#logo {
+	position:absolute;
+	top:200px;
+	left:490px;
+	width:300px;
+	height:287px;
+	background-image:url('logo.png');
+	background-size:contain;
+	-webkit-filter:drop-shadow(2px 2px 12px #000) ;
+}

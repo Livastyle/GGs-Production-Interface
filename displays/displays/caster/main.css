@@ -1,0 +1,216 @@
+
+
+#playerinfo {
+	position:fixed;
+	display:flex;
+	left:0px;
+	top:0px;
+	bottom:80px;
+	right:400px;
+	background:#111;
+	
+	align-content: space-around;
+	align-items:center;
+	justify-content:space-evenly;
+	flex-wrap: wrap;
+}
+
+#playerinfo .item {
+	
+	width:47%;
+	height:47%;
+	background:#00f;
+}
+#playerinfo .item .nickname {
+	font-size:50px;
+	font-weight:bold;
+	text-align:center;
+}
+
+#clock {
+	position:fixed;
+	bottom:0px;
+	left:0px;
+	width:200px;
+	height:80px;
+	line-height:80px;
+	vertical-align:middle;
+	font-size:40px;
+	text-align:center;
+	color:#fff;
+	background:#000;
+}
+
+
+#casino {
+	position:fixed;
+	top:0px;
+	right:0px;
+	height:150px;
+	width:400px;
+	background:#0a0;
+}
+
+#casino .p1,
+#casino .p2 {
+	position:absolute;
+	top:4px;
+	width:190px;
+	font-weight:bold;
+	font-size:20px;
+	white-space:nowrap;
+	text-align:center;
+	overflow:hidden;
+	text-overflow:ellipsis;
+}
+#casino .p1 {
+	left:5px;
+}
+#casino .p2 {
+	right:5px;
+}
+
+#casino .bar {
+	position:absolute;
+	top:30px;
+	left:5px;
+	right:5px;
+	height:10px;
+	background:#00f;
+	border-radius:5px;
+	overflow:hidden;
+}
+#casino .bar .inner {
+	position:absolute;
+	left:0%;
+	top:0%;
+	bottom:0%;
+	width:50%;
+	background:#f00;
+}
+#casino .info {
+	position:absolute;
+	top:50px;
+	left:5px;
+	right:5px;
+	display:grid;
+	text-align:center;
+	font-weight:bold;
+	font-size:24px;
+	grid-template-columns: 1fr 70px 1fr;
+	grid-template-rows:24px 24px;
+}
+#casino .info div {
+	align-self:center ;
+}
+#casino .info .label {
+	font-size:16px;
+}
+#casino .status {
+	position:absolute;
+	bottom:5px;
+	left:5px;
+	right:5px;
+	padding:9px;
+	text-align:center;
+	font-weight:bold;
+	font-size:20px;
+	background:#000;
+}
+
+#smashgg_queue {
+	position:fixed;
+	top:150px;
+	right:0px;
+	bottom:80px;
+	width:400px;
+	background:#f00;
+	overflow:hidden;
+}
+#smashgg_queue .item {
+	margin:5px;
+	padding:10px 0px;
+	border-radius:9px;
+	text-align:center;
+	background:#000;
+}
+#smashgg_queue .item:nth-child(5) {
+	opacity:0.6;
+}
+#smashgg_queue .item:nth-child(6) {
+	opacity:0.3;
+}
+#smashgg_queue .item .round {
+	font-size:18px;
+	margin-bottom:10px;
+	color:#ccc;
+	text-transform:uppercase;
+	font-weight:bold;
+}
+#smashgg_queue .item .p1,
+#smashgg_queue .item .p2 {
+	font-size:28px;
+}
+#smashgg_queue .item .sep {
+	background:#fff;
+	height:2px;
+	margin:13px 30px;
+	opacity:0.6;
+}
+#smashgg_queue .item .sep span {
+	position:relative;
+	bottom:12px;
+	height:28px;
+	padding:0px 10px;
+	text-transform:uppercase;
+	font-weight:bold;
+	background:#000;
+}
+
+
+#schedule {
+	position:fixed;
+	bottom:0px;
+	left:200px;
+	right:0px;
+	height:80px;
+	color:#fff;
+	background:#222;
+	
+	display:flex;
+	
+}
+
+
+#schedule .item {
+	position:relative;
+	width:300px;
+	flex-shrink:0;
+background: rgb(102,114,118);
+background: -moz-linear-gradient(top, rgba(102,114,118,1) 0%, rgba(63,74,79,1) 50%, rgba(98,112,120,1) 100%);
+background: -webkit-linear-gradient(top, rgba(102,114,118,1) 0%,rgba(63,74,79,1) 50%,rgba(98,112,120,1) 100%);
+background: linear-gradient(to bottom, rgba(102,114,118,1) 0%,rgba(63,74,79,1) 50%,rgba(98,112,120,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#667276', endColorstr='#627078',GradientType=0 );
+}
+#schedule .item:first-child {
+background: rgb(160,203,95);
+background: -moz-linear-gradient(top, rgba(160,203,95,1) 0%, rgba(104,174,18,1) 50%, rgba(145,222,72,1) 100%);
+background: -webkit-linear-gradient(top, rgba(160,203,95,1) 0%,rgba(104,174,18,1) 50%,rgba(145,222,72,1) 100%);
+background: linear-gradient(to bottom, rgba(160,203,95,1) 0%,rgba(104,174,18,1) 50%,rgba(145,222,72,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a0cb5f', endColorstr='#91de48',GradientType=0 );
+}
+#schedule .item:nth-child(2) {
+background: rgb(203,165,95);
+background: -moz-linear-gradient(top, rgba(203,165,95,1) 0%, rgba(174,127,18,1) 50%, rgba(222,187,72,1) 100%);
+background: -webkit-linear-gradient(top, rgba(203,165,95,1) 0%,rgba(174,127,18,1) 50%,rgba(222,187,72,1) 100%);
+background: linear-gradient(to bottom, rgba(203,165,95,1) 0%,rgba(174,127,18,1) 50%,rgba(222,187,72,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cba55f', endColorstr='#debb48',GradientType=0 );
+}
+#schedule .item .label {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	font-size:24px;
+	font-weight:bold;
+}

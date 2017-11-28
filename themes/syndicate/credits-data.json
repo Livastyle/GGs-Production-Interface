@@ -1,0 +1,26 @@
+{
+	"speed":50,
+	"tournament":"Union XVI",
+	"location":"Helsinki, Finland",
+	"date":"7th - 9th July 2017",
+	"lines":[
+		{"value":"Live Production","type":"head"},
+		{"value":"Liva","type":"normal"},
+		{"value":"Tournament Organisation","type":"head"},
+		{"value":"Stemu","type":"normal"},
+		{"value":"Loota","type":"normal"},
+		{"value":"Commentators","type":"head"},
+		{"value":"M1","type":"normal"},
+		{"value":"Novi","type":"normal"},
+		{"value":"Paju","type":"normal"},
+		{"value":"Afresh","type":"normal"},
+		{"value":"Salevits","type":"normal"},
+		{"value":"Stemu","type":"normal"},
+		{"value":"","type":"normal"},
+		{"value":"Special thanks","type":"head"},
+		{"value":"Salevits & Jekku","type":"normal"},
+		{"value":"Karvis","type":"normal"}
+
+
+	]
+}

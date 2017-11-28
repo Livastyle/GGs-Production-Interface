@@ -1,0 +1,185 @@
+@font-face{
+	font-family: 'cambria-bold';
+	src: url('cambria-bold.ttf');
+}
+
+body {
+	width:1280px;
+	height:720px;
+}
+
+#main {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	opacity:1;
+	font-size:14px;
+	text-align:center;
+	color:#fff;
+	font-family: 'cambria-bold';
+}
+
+#blackfade {
+	position:absolute;
+	left:0px;
+	right:0px;
+	bottom:-200px;
+	opacity:0;
+	height:200px;
+	background:linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.3));
+	
+	-webkit-transition:all 1500ms 0ms;
+}
+
+#main.visible #blackfade {
+	bottom:0px;
+	opacity:1;
+	-webkit-transition:all 500ms 0ms;
+}
+
+#casterpanels {
+	position:absolute;
+	left:0px;
+	right:0px;
+	bottom:0px;
+}
+
+.panel {
+	position:absolute;
+	bottom:10px;
+	width:438px;
+	height:106px;
+	opacity:0;
+	-webkit-transition:opacity 400ms 0ms, left 0ms 400ms, right 0ms 400ms;
+}
+
+
+#main.visible .panel.visible {
+	opacity:1;
+	-webkit-transition:all 400ms;
+}
+
+
+#casterpanels.setup1 .mid {
+	left:420px;
+}
+#casterpanels.setup2 .left {
+	left:100px;
+}
+#casterpanels.setup2 .right {
+	right:100px;
+}
+#casterpanels.setup3 .left {
+	left:50px;
+}
+#casterpanels.setup3 .mid {
+	left:420px;
+}
+#casterpanels.setup3 .right {
+	right:50px;
+}
+
+#casterpanels.setup3 .panel {
+	transform:scale(0.8);
+}
+
+
+.panel .top {
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:438px;
+	height:73px;
+	line-height:73px;
+	
+	vertical-align:middle;
+	z-index:10;
+	
+	font-size:30px;
+	font-weight:Bold;
+	
+	text-shadow:1px 1px 1px #000;
+	
+}
+
+.panel.left .top {
+	background:url(caster/lefttop.png);
+}
+.panel.mid .top {
+	background:url(caster/midtop.png);
+}
+.panel.right .top {
+	background:url(caster/righttop.png);
+}
+
+
+
+.panel .bottom {
+	position:absolute;
+	left:48px;
+	bottom:20px;
+	opacity:0;
+	width:343px;
+	height:56px;
+	padding-top:5px;
+	line-height:50px;
+	vertical-align:middle;
+	z-index:7;
+	background-image:url(caster/bottombar.png);
+	-webkit-transition:all 0ms 500ms;
+}
+
+
+
+.panel .bottom:not(.filled) span:before {
+	content:'#BEAST7';
+	opacity:0.3;
+}
+.panel .bottom.filled span:before {
+	content:'';
+	position:relative;
+	bottom:2px;
+	display:inline-block;
+	background-image:url(caster/logo_twitter.png);
+	background-size:contain;
+	background-position:50% 50%;
+	vertical-align:middle;
+	width:20px;
+	height:20px;
+}
+
+#main.visible .panel.visible .bottom {
+	bottom:0px;	
+	opacity:1;
+	-webkit-transition:all 400ms 300ms;
+}
+
+.panel .bottom .flag {
+	position:absolute;
+	top:19px;
+	left:16px;
+	width:100px;
+	bottom:19px;
+	background-repeat:no-repeat;
+	background-size:contain;
+	background-position:left;
+	
+}
+
+
+#logo {
+	position:absolute;
+	left:571px;
+	bottom:10px;
+	width:138px;
+	height:138px;
+	background:url(caster/logo.png);
+}
+#logo.topright {
+	left:auto;
+	right:20px;
+	top:20px;
+	transform:scale(0.6);
+}

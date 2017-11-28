@@ -1,0 +1,64 @@
+{
+	w:1280,
+	h:720,
+	names:{
+		rgba:[255,255,255,255],
+		align:"center"
+	},
+	round: {
+		rgba:[255,255,255,255],
+		align:"center"
+	},
+	layer:[
+		{
+			"type":"image",
+			"name":"bottom.png",
+			"pos": [0,0],
+			"size": [1280,720]
+		},
+		{
+			"type":"character",
+			"name":"1",
+			"pos": [0,100],
+			"size": [400,400]
+			
+		},
+		{
+			"type":"character",
+			"name":"2",
+			"pos": [0,100],
+			"size": [400,400]
+		},
+		{
+			"type":"image",
+			"name":"top.png",
+			"pos": [0,0],
+			"size": [1280,720]
+		},
+		{
+			"type":"text",
+			"name":"round",
+			"pos": [0,0],
+			"size": [1280,720]
+		},
+		{
+			"type":"text",
+			"name":"name1",
+			"pos": [10,10],
+			"size": [400,100]
+		},
+		{
+			"type":"text",
+			"name":"name2",
+			"pos": [710,10],
+			"size": [400,100]
+		},
+		{
+			"type":"text",
+			"name":"round",
+			"pos": [410,600],
+			"size": [400,100]
+		}
+		
+	]
+}

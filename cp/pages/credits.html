@@ -1,0 +1,106 @@
+<style type="text/css">
+
+</style>
+<div id="credits-config">
+	<table>
+		<tr>
+			<th>Tournament:</th>
+			<td>
+				<input type="text" id="credits_form_tournament" value="" />
+			</td>
+			<th>Date:</th>
+			<td>
+				<input type="text" id="credits_form_date" value="" />
+			</td>
+		</tr>
+		<tr>
+			<th>Location:</th>
+			<td>
+				<input type="text" id="credits_form_location" value="" />
+			</td>
+			<th>:</th>
+			<td>
+				<input type="text" value="" />
+			</td>
+		</tr>
+	</table>
+	
+	
+	
+	<div id="credits-lines">
+	
+	</div>
+	<button onclick="creditsAddLine();">Add line</button>
+</div>
+
+<script type="text/javascript">
+var scriptTag = document.getElementsByTagName('script');
+scriptTag = scriptTag[scriptTag.length - 1];
+$(scriptTag.parentNode).on('opened', creditsInit);
+$(window).on('profileloaded', creditsInit);
+
+var creditsLines = [];
+
+function creditsInit(){
+	loadCreditsDataFile(creditsInsertData);
+}
+
+function creditsInsertData(data){
+	console.log(data);
+	
+	creditsLines = data.lines;
+	
+	$("#credits_form_tournament").val(data.tournament);
+	$("#credits_form_location").val(data.location);
+	$("#credits_form_date").val(data.date);
+	$("#credits_form_speed").val(data.speed);
+	
+	creditsRefreshLines();
+	
+}
+
+function creditsRefreshLines(){
+
+	var $box = $("#credits-lines");
+	$box.html('');
+
+
+	
+	
+	for(index in creditsLines){
+		var lineObj = creditsLines[index];
+		var $item = $('<div class="item" />');
+		//d = addItemToFragment(d, lineObj.value, lineObj.type);
+		$item.append('<input type="text" style="width:300px;" value="'+lineObj.value+'" />');
+		$item.append('<input type="text" style="width:70px;" value="'+lineObj.type+'" />');
+		$item.appendTo($box);
+	}
+}
+
+function creditsAddLine(){
+	creditsLines.push({"value":"","type":"normal"});
+	creditsRefreshLines();
+}
+
+function loadCreditsDataFile(callback, alwaysCallback, errorCallback){
+	$.ajax({
+		type: "GET",
+		dataType : 'json',
+		cache: false,
+		async:true,
+		url : "./../themes/"+profile.theme+"/credits-data.json"
+	}).done(function(data){
+		callback(data);
+	}).always(function(){
+		if(alwaysCallback != undefined)
+			alwaysCallback();
+	}).fail(function(e1,e2,e3){
+		console.log(e2+'-'+e3);
+		if(errorCallback != undefined)
+			errorCallback(e1,e2,e3);
+	});	
+}
+
+
+
+</script>

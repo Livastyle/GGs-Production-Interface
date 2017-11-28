@@ -1,0 +1,41 @@
+
+
+#main {
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:1280px;
+	height:720px;
+	font-family:segoe ui;
+	text-transform:uppercase;
+	background:url('staytuned.png');
+}
+
+#countdown {
+	position:absolute;
+	left:20px;
+	bottom:45px;
+	width:230px;
+	font-size:57px;
+	text-align:center;
+	font-weight:bold;
+}
+
+#upper {
+	position:absolute;
+	left:280px;
+	right:200px;
+	bottom:90px;
+	line-height:90px;
+	font-size:60px;
+	font-weight:bold;
+}
+#lower {
+	position:absolute;
+	left:280px;
+	right:220px;
+	bottom:10px;
+	line-height:60px;
+	font-size:40px;
+	font-weight:bold;
+}

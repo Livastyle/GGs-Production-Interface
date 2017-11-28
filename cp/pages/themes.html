@@ -1,0 +1,66 @@
+<div id="themes-options">
+	<button onclick="themesOpenAddPanel();">Add Theme</button>
+</div>
+<div id="detailed-themelist"></div>
+
+<div id="themes-edit-panel" class="modal">
+	<div class="left">
+		<div class="label">Label</div>
+		<input type="text" class="def" id="themes-edit-label" style="width:400px;" />
+	</div>
+	<div class="left" style="margin-left:20px;">
+		<div class="label">Version</div>
+		<input type="text" class="def" id="themes-edit-version" style="width:60px;" />
+	</div>
+	<div class="clear"></div>
+	<div>
+		<div class="label">Description</div>
+		<input type="text" class="def" id="themes-edit-note" />
+	</div>
+	<div class="left">
+		<div class="label">Resolution</div>
+		<input type="number" min="1" class="def" id="themes-edit-resolution-x" style="width:60px;" /> x
+		<input type="number" min="1" class="def" id="themes-edit-resolution-y" style="width:60px;" />
+	</div>
+	<div class="left" style="margin-left:20px;">
+		<div class="label">Commentators</div>
+		<input type="number" class="def" id="themes-edit-caster" min="0" style="width:60px;" />
+	</div>
+	<div class="clear"></div>
+	<div>
+		<div class="label">Custom fields</div>
+		<div id="themes-edit-field-list"></div>
+		<div>
+			<button onclick="themesAddCustomField();">Add</button>
+			<button onclick="themesRemoveCustomField();">Remove</button>
+		</div>
+		<input type="text" value="" id="themes-edit-fields" />
+	</div>
+
+</div>
+
+<script type="text/javascript">
+
+function themesOpenAddPanel(theme){
+	var themeObj = getThemeByName(theme);
+	if(themeObj){
+		
+		$("#themes-edit-label").val(themeObj.label);
+	}
+	showModal("themes-edit-panel");
+}
+
+function themesAddCustomField(){
+	var $item = $('<div class="item" />');
+	$item.append('<div class="name"><input type="text" class="def" value="" /></div>');
+	$item.append('<div class="label"><input type="text" class="def" value="" /></div>');
+	$item.append('<div class="type"><input type="text" class="def" value="" /></div>');
+	$item.append('<div class="checkbox"><input type="checkbox" value="1" /></div>');
+	$item.append('<div class="frontpage"><input type="checkbox" value="1" /></div>');
+	$("#themes-edit-field-list").append($item);
+}
+function themesRemoveCustomField(){
+
+}
+
+</script>

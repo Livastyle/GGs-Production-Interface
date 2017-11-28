@@ -1,0 +1,218 @@
+#main {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+}
+#field {
+	position:absolute;
+	left:210px;
+	right:210px;
+	bottom:20px;
+	height:160px;
+}
+#middle {
+	position:absolute;
+	top:20px;
+	left:330px;
+	right:550px;
+	width:200px;
+	height:100px;
+	opacity:0;
+	transform:scale(0.8) translateY(330px);
+	transition:.4s .5s;
+}
+#main.visible #middle {
+	transition:.4s 1s;
+	opacity:1;
+	transform:scale(1) translateY(0px);
+}
+
+
+#middle_logo {
+	position:absolute;
+	left:0px;
+	top:20px;
+	width:200px;
+	height:100px;
+	opacity:0;
+	transform:scaleY(0.4);
+	transform-origin:50% 100%;
+	transition:all .4s 1.2s;
+	background-image:url('hflanlogo.png');
+	background-size:contain;
+	background-position:50% 50%;
+	background-repeat:no-repeat;
+}
+#main.visible #middle_logo {
+	transform:scaleY(1);
+	opacity:1;
+	transition:all .4s 1.2s;
+}
+
+#middle_logo_bg {
+	position:absolute;
+	left:0px;
+	top:20px;
+	width:200px;
+	height:100px;
+	opacity:0;
+	transform:scaleY(0.4);
+	transform-origin:50% 100%;
+	transition:all .4s 1.2s;
+	background-image:url('hflanlogo_white.png');
+	background-size:contain;
+	background-position:50% 50%;
+	background-repeat:no-repeat;
+	
+	-webkit-filter:drop-shadow(0px 0px 7px #000);
+	
+
+}
+
+
+#main.visible #middle_logo_bg {
+	transform:scaleY(1);
+	opacity:1;
+	transition:all .4s 1.2s;
+}
+
+
+#left,
+#right {
+	position:absolute;
+	height:70px;
+	width:340px;
+	top:56px;
+	transition:transform .3s 0s;
+	box-shadow:0px 0px 8px #000;
+}
+
+#left {
+	left:80px;
+	transform:skewX(20deg) scaleX(0);
+	transform-origin:100% 50%;
+	background: linear-gradient(to right,  rgba(255,255,255,1) 11%,rgba(255,255,255,1) 21%,rgba(210,210,210,1) 100%);
+}
+
+#left:after {
+	content:'';
+	position:absolute;
+	left:-5px;
+	width:10px;
+	background:#333;
+	top:0px;
+	bottom:0px;
+}
+
+#main.visible #left {
+	transform:skewX(20deg) scaleX(1);
+	transition:transform .5s 1.4s;
+}
+#right {
+	right:80px;
+	transform:skewX(-20deg) scaleX(0);
+	transform-origin:0% 50%;
+	
+	background: linear-gradient(to right,  rgba(210,210,210,1) 0%,rgba(255,255,255,1) 79%,rgba(255,255,255,1) 89%);
+}
+#right:after {
+	content:'';
+	position:absolute;
+	right:-5px;
+	width:10px;
+	background:#333;
+	top:0px;
+	bottom:0px;
+}
+#main.visible #right {
+	transform:skewX(-20deg) scaleX(1);
+	transition:transform .5s 1.4s;
+}
+
+#cn1,
+#cn2 {
+	position:absolute;
+	top:5px;
+	width:250px;
+	height:30px;
+	text-align:center;
+	line-height:30px;
+	color:#cb7478;
+	font-weight:bold;
+	font-size:24px;
+	opacity:0;
+	transition:all .2s 0s;
+}
+
+#cn1 {
+	left:25px;
+	transform:skewX(-20deg) translateX(20px);
+}
+#cn2 {
+	right:25px;
+	transform:skewX(20deg) translateX(-20px);
+}
+#main.visible #cn1 {
+	opacity:1;
+	transform:skewX(-20deg) translateX(0px);
+	transition:all .4s 1.8s;
+}
+#main.visible #cn2 {
+	opacity:1;
+	transform:skewX(20deg) translateX(0px);
+	transition:all .4s 1.8s;
+}
+
+#ct1,
+#ct2 {
+	position:absolute;
+	top:40px;
+	width:250px;
+	height:24px;
+	color:#575f8f;
+	line-height:24px;
+	text-align:center;
+	font-size:14px;
+	font-weight:bold;
+	opacity:0;
+	transition:all .4s 1.8s;
+}
+#ct1 {
+	left:21px;
+	transform:skewX(-20deg) translateX(20px);
+}
+#ct2 {
+	right:21px;
+	transform:skewX(20deg) translateX(-20px);
+}
+
+#ct1 span,
+#ct2 span {
+	position:relative;
+	transition:opacity .2s;
+}
+#ct1 span.visible:before,
+#ct2 span.visible:before{
+	content:'';
+	position:absolute;
+	left:-24px;
+	top:-1px;
+	width:18px;
+	height:18px;
+	background-image:url(logo_twitter.png);
+	background-size:contain;
+	background-position:50% 50%;
+	background-repeat:no-repeat;
+	
+}
+
+#main.visible #ct1 {
+	opacity:1;
+	transform:skewX(-20deg) translateX(0px);
+}
+#main.visible #ct2 {
+	opacity:1;
+	transform:skewX(20deg) translateX(0px);
+}

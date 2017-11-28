@@ -1,0 +1,283 @@
+@font-face { 
+	font-family: segoeuib;
+	src: url('./segoeuib.ttf'); 
+}
+
+
+body {
+	width:1920px !important;
+	height:1080px !important;
+}
+#main {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	font-family: segoeuib;
+}
+#field {
+	position:absolute;
+	left:210px;
+	right:210px;
+	bottom:60px;
+	height:200px;
+}
+#middle {
+	position:absolute;
+	top:20px;
+	left:550px;
+	right:550px;
+	width:400px;
+	height:161px;
+	opacity:0;
+	transform:scale(0.8) translateY(330px);
+	transition:.4s .5s;
+}
+#main.visible #middle {
+	transition:.4s 1s;
+	opacity:1;
+	transform:scale(1) translateY(0px);
+}
+
+#middle_bg_left {
+	position:absolute;
+	left:9px;
+	top:0px;
+	width:242px;
+	height:161px;
+	background-image:url('caster_midde_bg.png');
+	background-position:left;
+	-webkit-filter:brightness(0.7);
+	transform:translateX(30px);
+	transition:.3s .3s;
+}
+
+#middle_bg_right {
+	position:absolute;
+	right:9px;
+	top:0px;
+	width:242px;
+	height:161px;
+	background-image:url('caster_midde_bg.png');
+	background-position:right;
+	-webkit-filter:brightness(0.7);
+	transform:translateX(-30px);
+	transition:.3s .3s;
+}
+#main.visible #middle_bg_left,
+#main.visible #middle_bg_right {
+	transition:.3s 1.3s;
+	transform:translateX(0px);
+}
+#middle_bg {
+	position:absolute;
+	left:29px;
+	top:0px;
+	width:342px;
+	height:161px;
+	background-image:url('caster_midde_bg.png');
+}
+#middle_logo {
+	position:absolute;
+	left:8px;
+	top:-15px;
+	width:384px;
+	height:195px;
+	opacity:0;
+	transform:scaleY(0.4);
+	transform-origin:50% 100%;
+	transition:all .4s 1.2s;
+	background-image:url('caster_midde_logo.png');
+}
+#main.visible #middle_logo {
+	transform:scaleY(1);
+	opacity:1;
+	transition:all .4s 1.2s;
+}
+#middle_gloss {
+	position:absolute;
+	left:29px;
+	top:0px;
+	width:342px;
+	height:161px;
+	background-image:url('caster_midde_gloss.png');
+}
+
+#left_bg1 {
+	position:absolute;
+	left:60px;
+	top:50px;
+	height:100px;
+	width:21px;
+	background:#fff;
+	transform:skewX(20deg) scaleY(0);
+	-webkit-filter:brightness(0.9);
+	transition:transform .2s .3s;
+}
+
+#left_bg2 {
+	position:absolute;
+	left:40px;
+	top:50px;
+	height:100px;
+	width:21px;
+	background:#eee;
+	transform:skewX(20deg) scaleY(0);
+	-webkit-filter:brightness(0.7);
+	transition:transform .2s .4s;
+}
+#right_bg1 {
+	position:absolute;
+	right:60px;
+	top:50px;
+	height:100px;
+	width:21px;
+	background:#fff;
+	transform:skewX(-20deg) scaleY(0);
+	-webkit-filter:brightness(0.9);
+	transition:transform .2s .3s;
+}
+
+#right_bg2 {
+	position:absolute;
+	right:40px;
+	top:50px;
+	height:100px;
+	width:21px;
+	background:#eee;
+	transform:skewX(-20deg) scaleY(0);
+	-webkit-filter:brightness(0.7);
+	transition:transform .2s .4s;
+}
+
+#main.visible #left_bg1 {
+	transition:transform .2s 1.7s;
+	transform:skewX(20deg) scaleY(1);
+}
+#main.visible #left_bg2 {
+	transition:transform .2s 1.6s;
+	transform:skewX(20deg) scaleY(1);
+}
+#main.visible #right_bg1 {
+	transition:transform .2s 1.7s;
+	transform:skewX(-20deg) scaleY(1);
+}
+#main.visible #right_bg2 {
+	transition:transform .2s 1.6s;
+	transform:skewX(-20deg) scaleY(1);
+}
+
+#left {
+	position:absolute;
+	left:80px;
+	top:50px;
+	height:100px;
+	width:540px;
+	background:#222;
+	transform:skewX(20deg) scaleX(0);
+	transform-origin:0% 50%;
+	transition:transform .3s 0s;
+}
+#main.visible #left {
+	transform:skewX(20deg) scaleX(1);
+	transition:transform .5s 1.9s;
+}
+#right {
+	position:absolute;
+	right:80px;
+	top:50px;
+	height:100px;
+	width:540px;
+	background:#222;
+	transform:skewX(-20deg) scaleX(0);
+	transform-origin:100% 50%;
+	transition:transform .3s 0s;
+}
+#main.visible #right {
+	transform:skewX(-20deg) scaleX(1);
+	transition:transform .5s 1.9s;
+}
+
+#cn1,
+#cn2 {
+	position:absolute;
+	top:5px;
+	width:450px;
+	height:50px;
+	text-align:center;
+	line-height:50px;
+	font-size:46px;
+	opacity:0;
+	transition:all .2s 0s;
+}
+
+#cn1 {
+	left:30px;
+	transform:skewX(-20deg) translateX(20px);
+}
+#cn2 {
+	right:30px;
+	transform:skewX(20deg) translateX(-20px);
+}
+#main.visible #cn1 {
+	opacity:1;
+	transform:skewX(-20deg) translateX(0px);
+	transition:all .4s 2.3s;
+}
+#main.visible #cn2 {
+	opacity:1;
+	transform:skewX(20deg) translateX(0px);
+	transition:all .4s 2.3s;
+}
+
+#ct1,
+#ct2 {
+	position:absolute;
+	top:60px;
+	width:435px;
+	height:34px;
+	line-height:34px;
+	text-align:center;
+	font-size:26px;
+	font-weight:bold;
+	opacity:0;
+	transition:all .4s 2.4s;
+}
+#ct1 {
+	left:21px;
+	transform:skewX(-20deg) translateX(20px);
+}
+#ct2 {
+	right:21px;
+	transform:skewX(20deg) translateX(-20px);
+}
+
+#ct1 span,
+#ct2 span {
+	position:relative;
+	transition:opacity .2s;
+}
+#ct1 span.visible:before,
+#ct2 span.visible:before{
+	content:'';
+	position:absolute;
+	left:-30px;
+	top:1px;
+	width:30px;
+	height:30px;
+	background-image:url(logo_twitter.png);
+	background-size:contain;
+	background-position:50% 50%;
+	background-repeat:no-repeat;
+	
+}
+
+#main.visible #ct1 {
+	opacity:1;
+	transform:skewX(-20deg) translateX(0px);
+}
+#main.visible #ct2 {
+	opacity:1;
+	transform:skewX(20deg) translateX(0px);
+}

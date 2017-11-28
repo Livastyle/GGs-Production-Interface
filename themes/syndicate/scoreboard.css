@@ -1,0 +1,1017 @@
+@font-face {
+	font-family:BebasNeue;
+	src:url('BebasNeue.otf');
+}
+
+body {
+	opacity:0;
+}
+
+
+#main {
+	position:fixed;
+	left:0px;
+	top:0px;
+	width:1280px;
+	height:720px;
+	overflow:hidden;
+	font-family:BebasNeue;
+}
+
+#melee_singles #game {
+	position:absolute;
+	left:220px;
+	right:220px;
+	top:10px;
+	bottom:10px;
+	border:3px solid #fff;
+}
+#melee_singles #game .inner {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	border:3px solid #000;
+}
+#melee_singles .side {
+	position:absolute;
+	top:10px;
+	bottom:10px;
+	width:216px;
+}
+#melee_singles #p1 {
+	left:0px;
+}
+#melee_singles #p2 {
+	right:0px;
+}
+
+#melee_singles .name {
+	position:absolute;
+	left:5px;
+	right:5px;
+	top:0px;
+	height:40px;
+	background:#000;
+	border:3px solid #fff;
+	overflow:hidden;
+}
+#melee_singles .name .bg {
+	position:absolute;
+	left:-10px;
+	right:-10px;
+	top:0px;
+	bottom:0px;
+	background: linear-gradient(90deg, rgba(30,30,30,1) 50%,rgba(0,0,0,1) 50.1%);	
+	background-size:30px 100%;
+	background-position:0% 0%;
+}
+#melee_singles #p1 .name .bg {
+	transform:skew(20deg);
+}
+#melee_singles #p2 .name .bg {
+	transform:skew(-20deg);
+}
+#melee_singles .name .inner {
+	position:absolute;
+	left:2px;
+	right:2px;
+	text-align:center;
+	font-size:36px;
+}
+#melee_singles .name .inner .teamlogo {
+	position:relative;
+	vertical-align:middle;
+	max-width:30px;
+	max-height:30px;
+	margin-right:5px;
+}
+#melee_singles .cam {
+	position:absolute;
+	left:5px;
+	right:5px;
+	top:43px;
+	height:340px;
+	border:3px solid #fff;
+}
+#melee_singles .cam .inner {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	border:2px solid #000;
+}
+#melee_singles .score {
+	position:absolute;
+	top:389px;
+	height:40px;
+	width:40px;
+	background:#fff;
+}
+#melee_singles #p1 .score {
+	right:5px;
+	padding-right:18px;
+}
+#melee_singles #p2 .score {
+	left:5px;
+	padding-left:18px;
+}
+#melee_singles .score .bg {
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	width:40px;
+	background:#fff;
+}
+#melee_singles #p1 .score .bg {
+	left:-20px;
+	transform:skew(20deg);
+}
+#melee_singles #p2 .score .bg {
+	right:-20px;
+	transform:skew(-20deg);
+}
+#melee_singles .score .value {
+	position:relative;
+	bottom:5px;
+	text-align:center;
+	font-size:48px;
+	font-weight:bold;
+	line-height:50px;
+	vertical-align:top;
+	color:#000;
+}
+#melee_singles .assets {
+	position:absolute;
+	top:389px;
+	height:34px;
+	width:70px;
+	background:#000;
+}
+#melee_singles #p1 .assets {
+	left:62px;
+	transform:skew(20deg);
+}
+#melee_singles #p2 .assets {
+	right:62px;
+	transform:skew(-20deg);
+}
+#melee_singles .assets .inner {
+	position:absolute;
+	top:2px;
+	left:2px;
+	right:2px;
+	bottom:2px;
+	border:2px solid #fff;
+	border-top-width:1px;
+	border-bottom-width:1px;
+	overflow:hidden;
+}
+#melee_singles .assets .inner > div {
+	position:absolute;
+	top:-1px;
+	left:-5px;
+	right:-5px;
+	bottom:-1px;
+	background-size:cover;
+	background-position:50%;
+	background-repeat:no-repeat;
+	transition:all .2s;
+	will-change:opacity;
+}
+#melee_singles #p1 .assets .inner > div {
+	transform:skew(-20deg);
+}
+#melee_singles #p2 .assets .inner > div {
+	transform:skew(20deg);
+}
+
+#melee_singles #p2 .assets .inner .character {
+	transform:skew(20deg) scaleX(-1);
+}
+
+#melee_singles .assets .character {
+	opacity:0;
+}
+#melee_singles .assets.mode_character .character {
+	opacity:1;
+}
+
+#melee_singles .assets .flag {
+	-webkit-filter:blur(0px);
+	opacity:1;
+}
+#melee_singles .assets.mode_character .flag {
+	-webkit-filter:blur(2px);
+	opacity:0.9;
+}
+
+#melee_singles #producer_note {
+	position:absolute;
+	right:10px;
+	bottom:30px;
+	width:200px;
+	height:170px;
+	line-height:30px;
+	text-align:center;
+	letter-spacing:1px;
+	background-image:url('img/ggs.png');
+	background-size:100px;
+	background-position:center bottom;
+	background-repeat:no-repeat;
+}
+#melee_singles #producer_note span {
+	display:block;
+}
+#melee_singles #producer_note span:first-child {
+	font-size:40px;
+}
+#melee_singles #producer_note span:last-child {
+	font-size:20px;
+}
+#melee_singles #sponsors_note {
+	position:absolute;
+	left:10px;
+	bottom:190px;
+	width:200px;
+	font-size:20px;
+	text-align:center;
+}
+#melee_singles #sponsors {
+	position:absolute;
+	left:5px;
+	bottom:10px;
+	width:200px;
+	height:170px;
+	border:3px solid #fff;
+	overflow:hidden;
+}
+#melee_singles #sponsors .inner {
+	position:absolute;
+	left:-30px;
+	right:-30px;
+	top:0px;
+	bottom:0px;
+	background: linear-gradient(90deg, rgba(11,11,11,1) 50%,rgba(0,0,0,1) 50.1%);	
+	background-size:50px 100%;
+	background-position:0% 0%;
+	transform:skew(20deg);
+}
+#melee_singles #sponsors .list {
+	position:absolute;
+	left:10px;
+	right:10px;
+	top:10px;
+	bottom:10px;
+}
+#melee_singles #sponsors .list .item {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	opacity:0;
+	background-size:contain;
+	background-position:50%;
+	background-repeat:no-repeat;
+	transition:opacity 1s;
+	
+}
+#melee_singles #sponsors .list .item.visible {
+	opacity:1;
+}
+#melee_singles #logo {
+	position:absolute;
+	left:590px;
+	top:-5px;
+	width:100px;
+	height:50px;
+	background-image:url('img/syndicate_100.png');
+	background-size:contain;
+	background-position:50%;
+	background-repeat:no-repeat;
+}
+#melee_singles #topbar {
+	position:absolute;
+	left:440px;
+	top:7px;
+	width:400px;
+	height:24px;
+	background:#fff;
+	text-align:center;
+	font-size:16px;
+	letter-spacing:1px;
+	line-height:22px;
+}
+#melee_singles #topbar .left,
+#melee_singles #topbar .right {
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	width:46%;
+	background:#fff;
+}
+#melee_singles #topbar .left {
+	left:-10px;
+	transform:skew(20deg);
+}
+#melee_singles #topbar .right {
+	right:-10px;
+	transform:skew(-20deg);
+}
+#melee_singles #topbar div .inner {
+	position:absolute;
+	left:3px;
+	top:2px;
+	right:3px;
+	bottom:2px;
+	background:#000;
+	background: linear-gradient(90deg, rgba(30,30,30,1) 50%,rgba(0,0,0,1) 50.1%);	
+	background-size:20px 100%;
+	background-position:0% 0%;
+	overflow:hidden;
+}
+#melee_singles #topbar .left .inner span {
+	display:inline-block;
+	transform:skew(-20deg);
+}
+#melee_singles #topbar .right .inner span {
+	display:inline-block;
+	transform:skew(20deg);
+}
+
+/* melee doubles */ 
+
+
+#melee_doubles .side {
+	position:absolute;
+	left:5px;
+	width:420px;
+	height:260px;
+}
+#melee_doubles #p1 {
+	top:10px;
+}
+#melee_doubles #p2 {
+	top:311px;
+}
+
+#melee_doubles .name {
+	position:absolute;
+	left:5px;
+	right:85px;
+	height:30px;
+	background:#000;
+	border:3px solid #fff;
+	overflow:hidden;
+}
+#melee_doubles .name1 {
+	border-bottom-width:0px;
+	top:223px;
+}
+#melee_doubles .name2 {
+	border-top-width:2px;
+	top:256px;
+}
+
+#melee_doubles .name .bg {
+	position:absolute;
+	left:-10px;
+	right:-10px;
+	top:0px;
+	bottom:0px;
+	background: linear-gradient(90deg, rgba(22,22,22,1) 50%,rgba(0,0,0,1) 50.1%);	
+	background-size:26px 100%;
+	background-position:0% 0%;
+	transform:skew(20deg);
+}
+#melee_doubles .name .character {
+	position:absolute;
+	left:0px;
+	top:0px;
+	bottom:0px;
+	width:60px;
+	background-size:cover;
+	background-position:100% 50%;
+	background-repeat:no-repeat;
+	box-shadow:inset 1px 1px 10px #000;
+}
+#melee_doubles .name .flag {
+	position:absolute;
+	right:2px;
+	top:2px;
+	bottom:2px;
+	width:40px;
+	overflow:hidden;
+}
+#melee_doubles .name .flag:after {
+	content:'';
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	
+	box-shadow:inset 1px 1px 10px #000;
+	
+}
+#melee_doubles .name .flag .inner {
+	position:absolute;
+	right:-10px;
+	top:0px;
+	left:-15px;
+	bottom:0px;
+	background-size:cover;
+	background-position: 50%;
+	background-repeat:no-repeat;
+}
+#melee_doubles .name .inner {
+	position:absolute;
+	left:62px;
+	right:22px;
+	font-size:27px;
+}
+#melee_doubles .name .inner .teamlogo {
+	position:relative;
+	vertical-align:middle;
+	max-width:28px;
+	max-height:28px;
+	margin-right:5px;
+}
+#melee_doubles .score {
+	position:absolute;
+	top:226px;
+	right:37px;
+	width:30px;
+	height:65px;
+	background:#fff;
+	padding-right:18px;
+}
+#melee_doubles .score .bg {
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	width:40px;
+	background:#fff;
+	right:-20px;
+	transform:skew(-20deg);
+}
+#melee_doubles .score .value {
+	position:absolute;
+	top:-3px;
+	left:0px;
+	right:-10px;
+	text-align:center;
+	font-size:60px;
+	color:#000;
+}
+
+#melee_doubles .cam {
+	position:absolute;
+	left:5px;
+	right:5px;
+	top:0px;
+	height:220px;
+	border:3px solid #fff;
+}
+#melee_doubles .cam .inner {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	border:2px solid #000;
+}
+
+#melee_doubles #game {
+	position:absolute;
+	left:430px;
+	right:10px;
+	top:10px;
+	bottom:10px;
+	border:3px solid #fff;
+}
+#melee_doubles #game .inner {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	border:3px solid #000;
+}
+
+#melee_doubles #topbar {
+	position:absolute;
+	left:640px;
+	top:7px;
+	width:400px;
+	height:24px;
+	background:#fff;
+	text-align:center;
+	font-size:16px;
+	letter-spacing:1px;
+	line-height:22px;
+}
+#melee_doubles #topbar .left,
+#melee_doubles #topbar .right {
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	width:46%;
+	background:#fff;
+}
+#melee_doubles #topbar .left {
+	left:-10px;
+	transform:skew(20deg);
+}
+#melee_doubles #topbar .right {
+	right:-10px;
+	transform:skew(-20deg);
+}
+#melee_doubles #topbar div .inner {
+	position:absolute;
+	left:3px;
+	top:2px;
+	right:3px;
+	bottom:2px;
+	background:#000;
+	background: linear-gradient(90deg, rgba(30,30,30,1) 50%,rgba(0,0,0,1) 50.1%);	
+	background-size:20px 100%;
+	background-position:0% 0%;
+	overflow:hidden;
+}
+#melee_doubles #topbar .left .inner span {
+	display:inline-block;
+	transform:skew(-20deg);
+}
+#melee_doubles #topbar .right .inner span {
+	display:inline-block;
+	transform:skew(20deg);
+}
+#melee_doubles #logo {
+	position:absolute;
+	left:790px;
+	top:-5px;
+	width:100px;
+	height:50px;
+	background-image:url('img/syndicate_100.png');
+	background-size:contain;
+	background-position:50%;
+	background-repeat:no-repeat;
+}
+
+
+#melee_doubles #producer_note {
+	position:absolute;
+	left:175px;
+	bottom:10px;
+	width:150px;
+	height:73px;
+	padding-right:95px;
+	padding-top:25px;
+	line-height:26px;
+	text-align:center;
+	letter-spacing:1px;
+	background-image:url('img/ggs.png');
+	background-size:90px;
+	background-position:100% 50%;
+	background-repeat:no-repeat;
+}
+#melee_doubles #producer_note span {
+	display:block;
+}
+#melee_doubles #producer_note span:first-child {
+	font-size:34px;
+}
+#melee_doubles #producer_note span:last-child {
+	font-size:20px;
+}
+
+#melee_doubles #sponsors {
+	position:absolute;
+	left:10px;
+	bottom:10px;
+	width:150px;
+	height:92px;
+	border:3px solid #fff;
+	overflow:hidden;
+}
+#melee_doubles #sponsors .inner {
+	position:absolute;
+	left:-30px;
+	right:-30px;
+	top:0px;
+	bottom:0px;
+	background: linear-gradient(90deg, rgba(11,11,11,1) 50%,rgba(0,0,0,1) 50.1%);	
+	background-size:50px 100%;
+	background-position:0% 0%;
+	transform:skew(20deg);
+}
+#melee_doubles #sponsors .list {
+	position:absolute;
+	left:10px;
+	right:10px;
+	top:10px;
+	bottom:10px;
+}
+#melee_doubles #sponsors .list .item {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	opacity:0;
+	background-size:contain;
+	background-position:50%;
+	background-repeat:no-repeat;
+	transition:opacity 1s;
+	
+}
+#melee_doubles #sponsors .list .item.visible {
+	opacity:1;
+}
+
+
+/* smash 4 */
+
+.smash4 #board {
+	position:absolute;
+	top:0px;
+	height:70px;
+	transform:scaleX(0);
+	transition:transform .5s .3s;
+}
+#main.visible .smash4 #board {
+	transform:scaleX(1);
+	transition:transform .5s;
+}
+#smash4_singles #board {
+	left:300px;
+	width:680px;
+}
+#smash4_doubles #board {
+	left:200px;
+	width:880px;
+}
+.smash4 .side {
+	position:absolute;
+	top:10px;
+	bottom:0px;
+	opacity:0;
+	transition:opacity .2s .2s;
+	overflow:hidden;
+}
+#main.visible .smash4 .side {
+	opacity:1;
+	transition:opacity .5s .3s;
+}
+#smash4_singles .side {
+	width:340px;
+}
+#smash4_doubles .side {
+	width:440px;
+}
+.smash4 .side .inner {
+	transition:transform .2s .1s;
+}
+.smash4 #p1 .inner {
+	transform:translateX(400px);
+}
+.smash4 #p2 .inner {
+	transform:translateX(-400px);
+}
+#main.visible .smash4 .side .inner {
+	transform:translateX(0px);
+	transition:transform .6s .1s;
+}
+.smash4 #p1 {
+	left:0px;
+	transform:skew(20deg);
+}
+.smash4 #p2 {
+	right:0px;
+	transform:skew(-20deg);
+}
+.smash4 .side .field {
+	position:absolute;
+	top:0px;
+	height:30px;
+	background: linear-gradient(90deg, rgba(31,31,31,1) 50%,rgba(1,1,1,1) 50.1%);	
+	background-size:30px 100%;
+	background-position:0% 0%;
+}
+#smash4_singles .side .field {
+	width:260px;
+}
+#smash4_doubles .side .field {
+	width:360px;
+}
+.smash4 #p1 .field {
+	left:50px;
+}
+.smash4 #p2 .field {
+	right:50px;
+}
+.smash4 .side .field .name {
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	line-height:32px;
+	font-size:24px;
+	vertical-align:middle;
+	text-align:center;
+}
+
+.smash4 .side .field .name .sep {
+	display:inline;
+	margin:0px 10px;
+	opacity:0.5;
+}
+
+#smash4_singles #p1 .name {
+	left:60px;
+	right:16px;
+	transform:skew(-20deg);
+}
+#smash4_singles #p2 .name {
+	right:60px;
+	left:16px;
+	transform:skew(20deg);
+}
+#smash4_doubles #p1 .name {
+	left:60px;
+	right:60px;
+	transform:skew(-20deg);
+}
+#smash4_doubles #p2 .name {
+	right:60px;
+	left:60px;
+	transform:skew(20deg);
+}
+.smash4 .side .field .name .teamlogo {
+	position:relative;
+	max-width:26px;
+	max-height:26px;
+	vertical-align:middle;
+	margin-right:6px;
+}
+
+
+.smash4 .field .assets {
+	position:absolute;
+	top:2px;
+	bottom:2px;
+	width:50px;
+	background:#fff;
+	overflow:hidden;
+}
+
+#smash4_singles #p1 .field .assets {
+	left:2px;
+}
+#smash4_singles #p2 .field .assets {
+	right:2px;
+}
+
+#smash4_doubles .field .assets_l {
+	left:2px;
+}
+#smash4_doubles .field .assets_r {
+	right:2px;
+}
+
+.smash4 .field .assets .flag,
+.smash4 .field .assets .character {
+	position:absolute;
+	left:-5px;
+	right:-5px;
+	top:0px;
+	bottom:0px;
+	background-size:cover;
+	background-position:50%;
+	transition:all .2s;
+	will-change:opacity;
+}
+
+.smash4 #p1 .field .assets .flag,
+.smash4 #p1 .field .assets .character {
+	transform:skew(-20deg);
+}
+.smash4 #p2 .field .assets .flag {
+	transform:skew(20deg);
+}
+.smash4 #p2 .field .assets .character {
+	transform:skew(20deg) scaleX(-1);
+}
+.smash4 .field .assets .character {
+	opacity:0;
+}
+.smash4 .field .assets.mode_character .character {
+	opacity:1;
+}
+.smash4 .field .assets.mode_character .flag {
+	-webkit-filter:blur(2px);
+	opacity:0.9;
+}
+.smash4 .field .assets .fx {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	box-shadow:inset 0px 0px 10px #000;
+}
+
+
+
+
+.smash4 .side .score {
+	position:absolute;
+	top:0px;
+	height:30px;
+	width:40px;
+	font-size:28px;
+	text-align:center;
+}
+.smash4 #p1 .score {
+	left:10px;
+	background: linear-gradient(to bottom, rgba(173,28,33,1) 0%,rgba(170,28,32,1) 100%);
+	transform:translateX(40px);
+}
+.smash4 #p2 .score {
+	right:10px;
+	background: linear-gradient(to bottom, rgba(25,75,137,1) 0%,rgba(25,74,137,1) 100%);
+	transform:translateX(-40px);
+}
+
+#main.visible .smash4 .score {
+	transition:transform .3s .7s;
+	transform:translateX(0px);
+}
+
+.smash4 .score span {
+	display:inline-block;
+	position:relative;
+	bottom:1px;
+}
+.smash4 #p1 .score span {
+	transform:skew(-20deg);
+}
+.smash4 #p2 .score span {
+	transform:skew(20deg);
+}
+.smash4 #mid-bg {
+	position:absolute;
+	left:150px;
+	right:150px;
+	top:7px;
+	height:30px;
+	opacity:0;
+}
+#main.visible .smash4 #mid-bg {
+	opacity:1;
+	transition:opacity .4s .4s;
+}
+.smash4 #mid-bg:before {
+	content:'';
+	display:block;
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	left:0px;
+	width:60%;
+	background:#fff;
+	transform:skew(-40deg);
+}
+.smash4 #mid-bg:after {
+	content:'';
+	display:block;
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	right:0px;
+	width:60%;
+	background:#fff;
+	transform:skew(40deg);
+}
+.smash4 #info-bg {
+	position:absolute;
+	top:30px;
+	height:18px;
+	opacity:0;
+	transform:scaleY(0);
+}
+#main.visible .smash4 #info-bg {
+	opacity:1;
+	transform:scaleY(1);
+	transition:all .4s .6s;
+}
+#smash4_singles #info-bg {
+	left:180px;
+	right:180px;
+}
+#smash4_doubles #info-bg {
+	left:230px;
+	right:230px;
+}
+.smash4 #info-bg:before {
+	content:'';
+	display:block;
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	left:0px;
+	width:60%;
+	background:#fff;
+	transform:skew(20deg);
+}
+.smash4 #info-bg:after {
+	content:'';
+	display:block;
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	right:0px;
+	width:60%;
+	background:#fff;
+	transform:skew(-20deg);
+}
+
+.smash4 #info {
+	position:absolute;
+	top:40px;
+	height:20px;
+	opacity:0;
+	transform:scaleY(0);
+	transform-origin:0px 0px;
+}
+#main.visible .smash4 #info {
+	opacity:1;
+	transform:scaleY(1);
+	transition:all .4s .6s;
+}
+#smash4_singles #info {
+	left:200px;
+	right:200px;
+}
+#smash4_doubles #info {
+	left:250px;
+	right:250px;
+}
+.smash4 #info > div {
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	width:47%;
+	background:#fff;
+}
+.smash4 #round {
+	left:0px;
+	transform:skew(20deg);
+}
+.smash4 #event {
+	right:0px;
+	transform:skew(-20deg);
+}
+.smash4 #info > div > .inner {
+	position:absolute;
+	top:1px;
+	bottom:2px;
+	background:#000;
+	text-align:center;
+}
+
+
+.smash4 #round .inner {
+	left:3px;
+	right:10px;
+	padding-right:15px;
+	padding-left:5px;
+}
+.smash4 #event .inner {
+	right:3px;
+	left:10px;
+	padding-right:5px;
+	padding-left:15px;
+}
+.smash4 #round .inner span {
+	display:inline-block;
+	transform:skew(-20deg);
+}
+.smash4 #event .inner span {
+	display:inline-block;
+	transform:skew(20deg);
+}
+.smash4 #logo {
+	position:absolute;
+	left:300px;
+	right:300px;
+	top:-5px;
+	bottom:5px;
+	background-image:url('img/syndicate_100.png');
+	background-size:contain;
+	background-position:50%;
+	background-repeat:no-repeat;
+}

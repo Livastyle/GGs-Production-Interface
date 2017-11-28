@@ -1,0 +1,265 @@
+@font-face{
+	font-family: upcll;
+	src: url(Prototype.ttf);
+}
+@font-face{
+	font-family: eurostyle_demi;
+	src: url('Eurostile LT Demi.ttf');
+}
+
+
+body {
+	margin:0px;
+	background-color: rgba(255, 255, 255, 0);
+	font-family: eurostyle_demi,segoe ui, Verdana;
+	font-weight:bold;
+	color:#FFFFFF;
+	white-space: nowrap;
+	overflow:hidden;
+}
+
+#main {
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	left:0px;
+	right:0px;
+}
+
+#main.visible {
+	transition:all .1s 2s;
+}
+#sub {
+	position:absolute;
+	top:15px;
+	left:263px;
+	width:753px;
+	height:37px;
+	z-index:10;
+
+	overflow:hidden;
+	background:url(scoreboard.png);
+
+	-webkit-clip-path: polygon(376px 0px, 376px 28px, 376px 56px, 376px 56px, 376px 28px, 376px 0px); 
+	-webkit-filter: brightness(4.1);
+	-webkit-transition:-webkit-clip-path .5s 1s, -webkit-filter 2s .7s;
+}
+
+#main.visible #sub {
+	-webkit-clip-path: polygon(-20px 0px, -50px 28px, -20px 56px, 773px 56px, 803px 28px, 773px 0px); 
+	-webkit-filter: brightness(1);
+}
+
+.charIcon, .flagIcon {
+	opacity:0;
+}
+
+#p11char,
+#p12char,
+#p21char,
+#p22char,
+#p11flag,
+#p12flag,
+#p21flag,
+#p22flag {
+	position:absolute;
+	top:6px;
+	width:24px;
+	height:24px;
+	background-size:contain;
+	background-position:50% 50%;
+	background-repeat:no-repeat;
+}
+
+#p11char,
+#p12char,
+#p21char,
+#p22char {
+	background-size:120%;
+}
+#main.singles #p11char,
+#main.doubles #p11char,
+#main.singles #p11flag,
+#main.doubles #p11flag {
+	left:45px;
+}
+#main.singles #p12char,
+#main.doubles #p12char,
+#main.singles #p12flag,
+#main.doubles #p12flag {
+	left:266px;
+}
+#main.singles #p21char,
+#main.doubles #p22char,
+#main.singles #p21flag,
+#main.doubles #p22flag {
+	right:45px;
+}
+#main.singles #p22char,
+#main.doubles #p21char,
+#main.singles #p22flag,
+#main.doubles #p21flag {
+	right:266px;
+}
+
+#main.singles #p12char,
+#main.singles #p22char,
+#main.singles #p12flag,
+#main.singles #p22flag {
+	display:none;
+}
+
+
+
+#p1name,
+#p2name {
+	position:absolute;
+	top:1px;
+	height:34px;
+	line-height:30px;
+	opacity:0;
+	text-shadow:1px 1px 0px rgba(0,0,0,0.8);
+	vertical-align:middle;
+	text-align:center;
+	font-family: segoe ui;
+	font-size:20px;
+	will-change:transform;
+	-webkit-transition:transform 1300ms 0.8s;
+}
+
+#main.singles #p1name,
+#main.singles #p2name {
+	width:215px;
+}
+#main.doubles #p1name,
+#main.doubles #p2name {
+	width:185px;
+}
+
+#p1name {
+	left:76px;
+	transform:translateX(80px);
+}
+#p2name {
+	right:76px;
+	transform:translateX(-80px);
+}
+
+.teamlogo {
+	display:inline-block;
+	position:relative;
+	bottom:0px;
+	margin-right:10px;
+	vertical-align:middle;
+	height:26px;
+}
+#main.doubles .teamlogo {
+	bottom:0px;
+	height:20px;
+}
+
+.sep {
+	opacity:0;
+	font-size:0;
+	margin:0px 3px;
+}
+
+#main.visible #p1name {
+	opacity:1;
+	-webkit-transform:translateX(0px);
+}
+#main.visible #p2name {
+	opacity:1;
+	-webkit-transform:translateX(0px);
+}
+
+#p1score,
+#p2score {
+	position:absolute;
+	top:2px;
+	width:34px;
+	height:30px;
+	line-height:30px;
+	vertical-align:middle;
+	text-align:center;
+	font-size:26px;
+}
+#p1score {
+	left:10px;
+}
+#p2score {
+	right:10px;
+}
+
+#p1state,
+#p2state {
+	position:absolute;
+	top:20px;
+	text-shadow:1px 1px 0px rgba(0,0,0,0.5);
+	font-size:14px;
+}
+#p1state {
+	left:300px;
+}
+#p2state {
+	right:300px;
+}
+
+#round {
+	position:absolute;
+	top:1px;
+	left:290px;
+	right:290px;
+	text-transform:uppercase;
+	text-align:center;
+	font-size:14px;
+	height:18px;
+	line-height:18px;
+	vertical-align:middle;
+	overflow:hidden;
+}
+
+
+
+
+.flare {
+	position:absolute;
+	top:-96px;
+	opacity:0;
+	width:550px;
+	z-index:15;
+	transform:translateX(0px);
+    animation-duration: 0.7s;
+    animation-timing-function: swing;
+    animation-delay: 1s;
+    animation-iteration-count: 1;
+}
+
+#flare1 {
+	left:376px;
+}
+#flare2 {
+	right:376px;
+}
+
+#main.visible #flare1 {
+	animation-name: flare1anim;
+}
+#main.visible #flare2 {
+	animation-name: flare2anim;
+}
+
+@keyframes flare1anim {
+    0%   {opacity:0;transform:translateX(0px);}
+    5%  {opacity:1;}
+    35%  {opacity:1;}
+	95% {opacity:0;}
+    100% {opacity:0;transform:translateX(-500px);}
+}
+@keyframes flare2anim {
+    0%   {opacity:0;transform:translateX(0px);}
+    5%  {opacity:1;}
+    35%  {opacity:1;}
+	95% {opacity:0;}
+    100% {opacity:0;transform:translateX(500px);}
+}

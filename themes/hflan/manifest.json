@@ -1,0 +1,15 @@
+{"label":"HFLAN","resolution":[1280,720],"casters":2,
+"fields":[
+	{"name":"event","label":"Event (sub-round)","type":"text","checkbox":false,"frontpage":true},
+	{"name":"round","label":"Round","type":"text","checkbox":false,"frontpage":true},
+	{"name":"overlaytop","label":"Lower Third - Top override","type":"text","checkbox":true},
+	{"name":"overlaybottom","label":"Lower Third - Bottom override","type":"text","checkbox":true},
+	{"name":"staytuned_top","label":"Stay Tuned - Top Text","type":"text","checkbox":false},
+	{"name":"staytuned_bottom","label":"Stay Tuned - Bottom Text","type":"text","checkbox":false},
+	{"name":"countdown","label":"Stay Tuned - Countdown","type":"text","checkbox":true,"frontpage":true},
+	{"name":"hostname","label":"Host - Name","type":"text","checkbox":false},
+	{"name":"hosttwitter","label":"Host - Twitter","type":"text","checkbox":false},
+	{"name":"bestof","label":"Best of","type":"dropdown","options":["1","3","5","7","9"],"checkbox":false,"frontpage":true},
+	{"name":"scoremode","label":"Score mode","type":"dropdown","options":["number","boxes"],"checkbox":false,"frontpage":false}
+],
+"note":"Specific theme for the HFLAN","ver":"0.4","previewpath":"screenshot"}

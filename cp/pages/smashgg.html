@@ -1,0 +1,547 @@
+
+<input type="text" id="smashgg_tournament_slug" value="beast-7-1" />
+<button onclick="smashggGetTournament();">Get tournament Data</button>
+
+<table>
+	<tr>
+		<th>tournament ID:</th>
+		<td><input type="text" id="smashgg_tournament_id" value="" /></td>
+	</tr>
+	<tr>
+		<th>tournament name:</th>
+		<td><input type="text" id="smashgg_tournament_name" value="" /></td>
+	</tr>
+	<tr>
+		<th>tournament hashtag:</th>
+		<td><input type="text" id="smashgg_tournament_hashtag" value="" /></td>
+	</tr>
+	
+</table>
+
+<select id="smashgg_tournament_stream" ></select>
+<button onclick="toggleSmashggQueueFetching(true);">Start fetching</button>
+
+
+<div id="debug" style="background:#000;color:#fff;font-family:monospace;padding:10px;margin-top:20px;white-space: pre;"></div>
+
+<script type="text/javascript">
+	var smashggApiBaseUrl = "https://api.smash.gg/";
+	
+	var smashggQueueFetchTime = 3000;
+	var smashggQueueFetchInterval;
+	
+	var smashggAssignPlayerList = [];
+	var smashggFieldNameTranslation = {
+		"nickname":"gamerTag",
+		"countryName":"country",
+		"twitch":"twitchStream",
+		"twitter":"twitterHandle"
+	};
+	
+	function initSmashgg(){
+		$("#smashgg_tournament_slug").val(profile.smashgg);
+	}
+	
+	function smashggGetTournament(){
+		var slug = $("#smashgg_tournament_slug").val();
+		var uri = smashggApiBaseUrl+"tournament/"+slug;
+		profile.smashgg = slug;
+	
+		$.getJSON("ajax/smashgg.json.php?url=tournament/"+slug+"?expand[]=stations")
+		.done(function(data){
+			var tObj = data.entities.tournament;
+			
+			
+			$("#smashgg_tournament_id").val(tObj.id);
+			$("#smashgg_tournament_name").val(tObj.name);
+			$("#smashgg_tournament_hashtag").val(tObj.hashtag);
+			
+			
+			getStationQueue(tObj.id);
+			
+			dbug(tObj);
+		
+		});
+	
+	}
+	
+	function getStationQueue(tournamentID){
+		$.getJSON("ajax/smashgg.json.php?url=station_queue/"+tournamentID)
+		.done(function(sqObj){
+			$("#smashgg_tournament_stream").html('');
+			if(sqObj.data && sqObj.data.entities && sqObj.data.entities.stream){
+				var streamChannelList = sqObj.data.entities.stream;
+				streamChannelList = [].concat( streamChannelList )
+				for(index in streamChannelList){
+					var channelItem = streamChannelList[index];
+					$("#smashgg_tournament_stream").append('<option value="'+channelItem.id+'">'+channelItem.streamName+'</option>');
+				}
+			}
+		});
+	}
+	
+	function getSmashggChannelQueue(obj, cid){
+		var setQueue = [];
+		for(index in obj.queues[cid]){
+			var setID = obj.queues[cid][index];
+			var set = getSmashggSetById(obj, setID);
+			if(set)
+				setQueue.push(set);
+		}
+		return setQueue;
+	}
+	
+	function getSmashggSetById(obj, setID){
+		var setObj = null;
+		if(obj.data && obj.data.entities && obj.data.entities.sets){
+		
+		
+			obj.data.entities.sets = [].concat( obj.data.entities.sets )
+			for(index in obj.data.entities.sets){
+				var setItemObj = obj.data.entities.sets[index];
+				if(setItemObj.id == setID){
+					setObj = {};
+					setObj.entrant1 = getSmashggEntrantById(obj.data, setItemObj.entrant1Id);
+					setObj.entrant2 = getSmashggEntrantById(obj.data, setItemObj.entrant2Id);
+					setObj.id = setItemObj.id;
+					setObj.bestOf = setItemObj.bestOf;
+					setObj.round = setItemObj.round;
+					setObj.roundText = setItemObj.fullRoundText;
+					setObj.roundDivision = setItemObj.roundDivision;
+					setObj.identifier = setItemObj.identifier;
+					setObj.group = getSmashggGroupById(obj, setItemObj.phaseGroupId);
+					
+					setObj.roundTopText = (setObj.round < 0 ? 'Losers' : 'Winners')+' Top '+ setItemObj.roundDivision;
+					
+				}
+			}
+		}
+		return setObj;
+	}
+	
+	function getSmashggEntrantById(obj, entrantId, fullEntry){
+		if(typeof(fullEntry) == 'undefined')
+			fullEntry = false;
+			
+		var entrantObj = null;
+		
+		for(index in obj.entities.entrants){
+			var entrantItemObj = obj.entities.entrants[index];
+			if(entrantItemObj.id == entrantId){
+				if(fullEntry) {
+					entrantObj = entrantItemObj;
+				}else{
+					entrantObj = {};
+					
+					entrantObj.name = entrantItemObj.name;
+					entrantObj.playerIds = [];
+					
+					for(PIDindex in entrantItemObj.playerIds)
+						entrantObj.playerIds.push(entrantItemObj.playerIds[PIDindex]);
+					
+				}
+				break;
+			}
+		}
+		
+		return entrantObj;
+	}	
+	
+	function getSmashggGroupById(obj, phaseGroupId){
+		var groupObj = null;
+		// TODO: Implement
+		
+		return groupObj;
+	}
+	
+	
+	function insertIntoSmashggSidebar(list){
+		for(index in list){
+			var setObj = list[index];
+			var elementID = "smashgg_sidebar_queue_item_"+setObj.id;
+			
+			// add to list
+			if(!$("#"+elementID).length){ 
+				
+				var $item = $('<div class="item" id="'+elementID+'" onclick="assignSmashggSetToScoreboard('+setObj.id+');" />');
+				$item.data("setid", setObj.id);
+				
+				$item.append('<div class="p1name" />');
+				$item.append('<div class="p2name" />');
+				$item.append('<div class="round" />');
+				$item.append('<div class="identifier" />');
+				
+				$item.appendTo("#sidebar-smashgg-queue");
+			}
+			
+			// modify list item info
+			$item = $("#"+elementID);
+			$item.css("top", (index*42)+"px");
+			$item.children(".p1name").text(setObj.entrant1 ? setObj.entrant1.name : "N/A");
+			$item.children(".p2name").text(setObj.entrant2 ? setObj.entrant2.name : "N/A");
+			$item.children(".round").text(setObj.roundText);
+			$item.children(".identifier").text(setObj.identifier);
+		}
+		
+		// remove items
+		$("#sidebar-smashgg-queue .item").each(function(k,v){
+			var setID = $(v).data("setid");
+			var isInList = false;
+			for(index in list){
+				if(list[index].id == setID){
+					isInList = true;
+					break;
+				}
+			}
+			if(!isInList)
+				$(v).remove();
+		});
+		
+	}
+	
+	function dbug(value){
+		if(typeof(value) != "String")
+			value = JSON.stringify(value, null, "\t");
+		$("#debug").html(value);
+	}
+	
+	function toggleSmashggQueueFetching(start){
+		var channelID = $("#smashgg_tournament_stream").val();
+		var tournamentID = $("#smashgg_tournament_id").val();
+		if(smashggQueueFetchInterval)
+			clearTimeout(smashggQueueFetchInterval);
+		if(start){
+			fetchSmashggQueue(tournamentID, channelID);
+			smashggQueueFetchInterval = setInterval("fetchSmashggQueue("+tournamentID+", "+channelID+");", smashggQueueFetchTime);
+		}
+	}
+	
+	function fetchSmashggQueue(tournamentID, channelID){
+		$.getJSON("ajax/smashgg.json.php?url=station_queue/"+tournamentID)
+		.done(function(sqObj){
+			if(sqObj.data && sqObj.data.entities && sqObj.data.entities.stream){
+				var streamChannelList = sqObj.data.entities.stream;
+				streamChannelList = [].concat( streamChannelList )
+				for(index in streamChannelList){
+					var channelItem = streamChannelList[index];
+
+					if(channelItem.id == channelID){
+						var queue = getSmashggChannelQueue(sqObj, channelItem.id);
+						sendSmashggQueueToWs(queue);
+						insertIntoSmashggSidebar(queue);
+						break;
+					}
+				}
+			}
+		});
+	}
+	
+	// send the smash.gg queue to the websocket server for use in overlays
+	function sendSmashggQueueToWs(list){
+		sendDataToWebsocket(list, "smashggqueue");
+	}
+	
+	function assignSmashggSetToScoreboard(setID){
+		$.getJSON("ajax/smashgg.json.php?url=set/"+setID+"?expand[]=entrants")
+		.done(function(data){
+			var setObj = data.entities.sets;
+			console.log(setObj);
+			var e1 = getSmashggEntrantById(data, setObj.entrant1Id, true);
+			var e2 = getSmashggEntrantById(data, setObj.entrant2Id, true);
+			var num = 1;
+			for(index in e1.mutations.players){
+				assignSmashggPlayerToScoreboard(e1.mutations.players[index], 1, num);
+				num++;
+			}			
+			num = 1;
+			for(index in e2.mutations.players){
+				assignSmashggPlayerToScoreboard(e2.mutations.players[index], 2, num);
+				num++;
+			}
+			correctPlayerFields();
+		});
+	}
+	
+	function assignSmashggPlayerToScoreboard(smashggPlayerObj, position, subPosition){
+		var inputPlayerNumber = position.toString()+(subPosition == 1 ? '' : subPosition).toString();
+		var playerObj = getPlayerBySmashggID(smashggPlayerObj.id);
+		if(playerObj){
+			$("#sb-pid"+inputPlayerNumber).val(playerObj.id);
+			$("#sb-pn"+inputPlayerNumber).val(playerObj.nickname);
+		}else{
+			// player with assigned smash.gg ID was not found
+			
+			playerObj = getPlayersByNickname(smashggPlayerObj.gamerTag); 
+			
+			if(playerObj.length == 0){
+				$("#sb-pid"+inputPlayerNumber).val(0);
+				$("#sb-pn"+inputPlayerNumber).val(smashggPlayerObj.gamerTag);
+			}else if(playerObj.length == 1){
+				$("#sb-pid"+inputPlayerNumber).val(playerObj[0].id);
+				$("#sb-pn"+inputPlayerNumber).val(playerObj[0].nickname);
+				playerObj[0].smashgg = smashggPlayerObj.id;
+			}else{
+				// we have many results
+				
+				
+				
+			}
+			
+		}
+	}
+	
+	
+	function openPlayerSmashggAssignPanel(destInput, nickname){
+		var currentSmashggID = $("#"+destInput).val();
+		if(!currentSmashggID || currentSmashggID < 1 || currentSmashggID.length == 0)
+			currentSmashggID = 0;
+		
+		$("#player-smashgg-assign-nickname-search").val(nickname);
+		searchSmashggPlayerAssignPanel();
+		
+		$("#smashgg-id-destination-input").val(destInput);
+		showModal("player-smashgg-assign-panel");
+	}
+	
+	function searchSmashggPlayerAssignPanel(){
+		$("#player-smashgg-assign-search-result .list, #player-smashgg-assign-search-result .info").hide();
+		$("#player-smashgg-assign-search-result .wait").show();
+		var nickname = $("#player-smashgg-assign-nickname-search").val();
+		
+		var searchStr = 'players?filter={"gamerTag": "'+encodeURIComponent(nickname)+'"}';
+		$.getJSON("ajax/smashgg.json.php?url="+encodeURI(searchStr))
+		.done(function(data){
+			if(data.total_count == 0){
+				$("#player-smashgg-assign-search-result .info").text("No players found in Smash.gg database :(").show();
+				$("#player-smashgg-assign-search-result .list, #player-smashgg-assign-search-result .wait").hide();
+				
+			}else{
+				$("#player-smashgg-assign-search-result .info, #player-smashgg-assign-search-result .wait").hide();
+				$("#player-smashgg-assign-search-result .list").html('');
+
+				var playerListResult = [].concat( data.items.entities.player );
+				smashggAssignPlayerList = playerListResult;
+				for(index in playerListResult){
+					var smashggPlayerObj = data.items.entities.player[index];
+					var profilePicUrl = "";
+					var profilePicHeight = 0;
+					for(imageIndex in smashggPlayerObj.images){
+						var picItem = smashggPlayerObj.images[imageIndex];
+						if(picItem.type == 'profile'){
+							if(profilePicHeight == 0 || profilePicHeight > picItem.height){
+								profilePicHeight = picItem.height;
+								profilePicUrl = picItem.url;
+							}
+						}
+					}
+					
+					var $item = $('<div class="item" />');
+					$item.append('<div class="name">'+(smashggPlayerObj.prefix ? smashggPlayerObj.prefix+' | ' : '')+smashggPlayerObj.gamerTag+'</div>');
+					if(smashggPlayerObj.country)
+						$item.append('<div class="country">'+smashggPlayerObj.country+'</div>');
+					if(smashggPlayerObj.region)
+						$item.append('<div class="region">'+smashggPlayerObj.region+'</div>');
+					if(smashggPlayerObj.rank)
+						$item.append('<div class="rank">'+smashggPlayerObj.rank+'</div>');
+					if(smashggPlayerObj.twitchStream)
+						$item.append('<div class="twitch">'+smashggPlayerObj.twitchStream+'</div>');
+					if(smashggPlayerObj.twitterHandle)
+						$item.append('<div class="twitter">'+smashggPlayerObj.twitterHandle+'</div>');
+					$item.append('<div class="profilepic" style="background-image:url(\''+profilePicUrl+'\');"></div>');
+					$item.append('<div class="buttons">'+
+					'<button onclick="assignSmashggIDToDestinationInput('+smashggPlayerObj.id+');">ID only</button>'+
+					'<button onclick="assignSmashggIDToDestinationInput('+smashggPlayerObj.id+', 1);">ID + Selected fields</button>'+
+					'<button onclick="assignSmashggIDToDestinationInput('+smashggPlayerObj.id+', 2);">Full Profile</button>'+
+					'</div>');
+					$item.appendTo("#player-smashgg-assign-search-result .list");
+				}
+				
+				$("#player-smashgg-assign-search-result .list").show();
+			}
+		});
+	
+	}
+	
+	function assignSmashggIDToDestinationInput(smashggID, insertType){
+		if(typeof(insertType) == 'undefined')
+			insertType = 0;
+		var destInput = $("#smashgg-id-destination-input").val();
+		$("#"+destInput).val(smashggID);
+		hideModal();
+		if(insertType >= 1){
+			sideEditCheckSmashggID(insertType);
+		}
+	}
+	
+	function sideEditCheckSmashggID(insertType){
+		var fieldList = [];
+		if(insertType == 1){
+			openSmashggProfileAssignPanel();
+		}else{
+			assignSmashggFieldsToProfile(["nickname","twitter","twitch","countryName"]);
+		}
+	}
+	
+	function openSmashggProfileAssignPanel(){
+		var localPlayerId = $("#se-userid").val();
+		var smashggId = $("#se-smashgg-id").val();
+		var smashggPlayerObj;
+		for(index in smashggAssignPlayerList){
+			if(smashggAssignPlayerList[index].id == smashggId){
+				smashggPlayerObj = smashggAssignPlayerList[index];
+			}
+		}
+		if(!smashggPlayerObj){
+			alert("Error in openSmashggProfileAssignPanel() - smashggPlayerObj is NULL");
+			return;
+		}
+		var localProfilePlayer = getPlayerById(localPlayerId);
+		
+		// fill in info into table
+		$("#player-smashgg-assign-selection-panel .nickname .smashgg").text(smashggPlayerObj[smashggFieldNameTranslation["nickname"]]);
+		$("#player-smashgg-assign-selection-panel .countryName .smashgg").text(smashggPlayerObj[smashggFieldNameTranslation["countryName"]]);
+		$("#player-smashgg-assign-selection-panel .twitch .smashgg").text(smashggPlayerObj[smashggFieldNameTranslation["twitch"]]);
+		$("#player-smashgg-assign-selection-panel .twitter .smashgg").text(smashggPlayerObj[smashggFieldNameTranslation["twitter"]]);
+		
+		$("#player-smashgg-assign-selection-panel .nickname .profile").text(localProfilePlayer.nickname);
+		$("#player-smashgg-assign-selection-panel .countryName .profile").text(localProfilePlayer.countryname);
+		$("#player-smashgg-assign-selection-panel .twitch .profile").text(localProfilePlayer.twitch);
+		$("#player-smashgg-assign-selection-panel .twitter .profile").text(localProfilePlayer.twitter);
+		
+		var fieldsList = ["nickname","twitter","twitch"];
+		for(index in fieldsList){
+			var fieldName = fieldsList[index];
+			if(smashggPlayerObj[smashggFieldNameTranslation[fieldName]] == null)
+				smashggPlayerObj[smashggFieldNameTranslation[fieldName]] = "";
+			$("#player-smashgg-assign-selection-panel ."+fieldName).removeClass("equal different invalid");
+			if(smashggPlayerObj[smashggFieldNameTranslation[fieldName]] == localProfilePlayer[fieldName]){
+				$("#player-smashgg-assign-selection-panel ."+fieldName).addClass("equal");
+				$("#player-smashgg-assign-selection-panel ."+fieldName+" input[type='checkbox']").prop("disabled", false).prop("checked", false);
+			}else{
+				$("#player-smashgg-assign-selection-panel ."+fieldName).addClass("different");
+				$("#player-smashgg-assign-selection-panel ."+fieldName+" input[type='checkbox']")
+				.prop("disabled", false)
+				.prop("checked", (smashggPlayerObj[smashggFieldNameTranslation[fieldName]].length > 0));
+			}
+		}
+		
+		$("#player-smashgg-assign-selection-panel .countryName").removeClass("equal different invalid");
+		if(getCountryByName(smashggPlayerObj[smashggFieldNameTranslation["countryName"]])){
+			if(smashggPlayerObj[smashggFieldNameTranslation["countryName"]].toLowerCase() == (localProfilePlayer["countryname"] ? localProfilePlayer["countryname"] : ' - Unknown - ').toLowerCase()){
+				$("#player-smashgg-assign-selection-panel .countryName").addClass("equal");
+				$("#player-smashgg-assign-selection-panel .countryName input[type='checkbox']").prop("disabled", false).prop("checked", false);
+			}else{
+				$("#player-smashgg-assign-selection-panel .countryName").addClass("different");
+				$("#player-smashgg-assign-selection-panel .countryName input[type='checkbox']").prop("disabled", false).prop("checked", true);
+			}
+		}else{
+			$("#player-smashgg-assign-selection-panel .countryName").addClass("invalid");
+			$("#player-smashgg-assign-selection-panel .countryName input[type='checkbox']").prop("disabled", true).prop("checked", false);
+		}
+		
+		
+		showModal("player-smashgg-assign-selection-panel");
+	
+	}
+	
+	function proceessSmashggProfileAssignPanel(){
+		var assignFieldList = [];
+		var fieldsList = ["nickname","twitter","twitch","countryName"];
+		for(index in fieldsList){
+			var fieldName = fieldsList[index];
+			var checked = $("#player-smashgg-assign-selection-panel ."+fieldName+" input[type='checkbox']").prop("checked");
+			if(checked)
+				assignFieldList.push(fieldName);
+		}
+		hideModal();
+		assignSmashggFieldsToProfile(assignFieldList);
+	}
+	
+	function assignSmashggFieldsToProfile(fieldList){
+		var smashggId = $("#se-smashgg-id").val();
+		if(smashggId == 0){
+			alert("Error: Smash.gg ID is 0");
+			return;
+		}
+		var smashggPlayerObj;
+		for(index in smashggAssignPlayerList){
+			if(smashggAssignPlayerList[index].id == smashggId){
+				smashggPlayerObj = smashggAssignPlayerList[index];
+			}
+		}
+		if(!smashggPlayerObj){
+			alert("Error in openSmashggProfileAssignPanel() - smashggPlayerObj is NULL");
+			return;
+		}
+		
+		for(index in fieldList){
+			var field = fieldList[index];
+			if(field == 'countryName'){
+				$("#se-country option:contains('"+smashggPlayerObj[smashggFieldNameTranslation[field]]+"')")[0].selected = true;
+			}else{
+				$("#se-"+field).val(smashggPlayerObj[smashggFieldNameTranslation[field]]);
+			}
+		}
+		
+	}
+	
+</script>
+
+
+
+<div id="player-smashgg-assign-selection-panel" class="modal">
+	
+	<table cellpadding="4" cellspacing="1" width="100%" style="background:#000;">
+		<tr>
+			<th>Field</th>
+			<th>Current Value</th>
+			<th>Smash.gg Value</th>
+		</tr>
+		<tr class="nickname">
+			<th>Nickname</th>
+			<th><span class="profile"></span></th>
+			<th><span class="smashgg"></span></th>
+			<th><input type="checkbox" value="1" id="" /></th>
+		</tr>
+		<tr class="countryName">
+			<th>Country</th>
+			<th><span class="profile"></span></th>
+			<th><span class="smashgg"></span></th>
+			<th><input type="checkbox" value="1" id="" /></th>
+		</tr>
+		<tr class="twitter">
+			<th>Twitter</th>
+			<th><span class="profile"></span></th>
+			<th><span class="smashgg"></span></th>
+			<th><input type="checkbox" value="1" id="" /></th>
+		</tr>
+		<tr class="twitch">
+			<th>Twitch</th>
+			<th><span class="profile"></span></th>
+			<th><span class="smashgg"></span></th>
+			<th><input type="checkbox" value="1" id="" /></th>
+		</tr>
+	</table>
+	<div style="position:absolute;bottom:5px;">
+		<button onclick="proceessSmashggProfileAssignPanel();" class="def">OK</button>
+	</div>
+</div>
+
+<div id="player-smashgg-assign-panel" class="modal">
+	
+	<div>
+		<input type="text" value="" id="player-smashgg-assign-nickname-search" placeholder="Nickname, GamerTag ..." />
+		<button onclick="searchSmashggPlayerAssignPanel();">Search</button>
+	</div>
+	
+	<div id="player-smashgg-assign-search-result">
+		<div class="wait"></div>
+		<div class="list"></div>
+		<div class="info">There were no players found for some odd reason</div>
+	</div>
+
+	<div style="position:absolute;bottom:5px;">
+		<button onclick="hideModal();" class="def">Cancel</button>
+	</div>
+	<input type="hidden" id="smashgg-id-destination-input" value="0" />
+</div>

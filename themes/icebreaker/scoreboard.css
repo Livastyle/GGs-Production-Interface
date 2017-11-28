@@ -1,0 +1,242 @@
+@font-face { 
+	font-family: segoeuib;
+	src: url('./segoeuib.ttf'); 
+}
+
+
+#main {
+	position:fixed;
+	left:0px;
+	top:0px;
+	width:1280px;
+	height:720px;
+	
+	white-space:nowrap;
+	overflow:hidden;
+	color:#000;
+	font-family: impact;
+	font-family: segoeuib;
+	text-align:center;
+	font-size:16px;
+}
+
+.playerside {
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	width:237px;
+	overflow:hidden;
+}
+#p1 {
+	left:0px;
+}
+#p2 {
+	right:0px;
+}
+
+.nicknamebg {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:41px;
+	height:49px;
+}
+.nicknamebg .item {
+	width:100%;
+	height:49px;
+	opacity:0.6;
+	background-size:auto 200%;
+	background-repeat:no-repeat;
+	background-position:50% 50%;
+}
+
+.team {
+	position:absolute;
+	top:41px;
+	height:24px;
+	font-size:0;
+	text-align:center;
+	text-shadow:1px 1px 0px #000,-1px 1px 0px #000,1px -1px 0px #000,-1px -1px 0px #000;
+	left:0px;
+	right:0px;
+	font-size:14px;
+}
+
+
+.team .item {
+	display:inline-block;
+	white-space:nowrap;
+	background-size:0px;
+	background-position:0% 50%;
+	color:#fff;
+	padding-left:2px;
+	padding-right:2px;
+	background-repeat:no-repeat;
+}
+.nickname {
+	position:absolute;
+	top:45px;
+	left:15px;
+	right:15px;
+	height:40px;
+	line-height:40px;
+	font-size:26px;
+	text-shadow:0px 0px 1px #000,2px 2px 0px #000,-2px 2px 0px #000,2px -2px 0px #000,-2px -2px 0px #000;
+	color:#fff;
+	transition:all .3s;
+}
+
+.nickname.hidden {
+	opacity:0;
+}
+.hasteam .nickname {
+	top:52px;
+}
+
+
+.info {
+	position:absolute;
+	top:453px;
+	left:0px;
+	right:0px;
+	height:36px;
+	background:url(./info_bg.png);
+	border-top:4px solid #000;
+	border-bottom:4px solid #000;	
+}
+
+
+.scorenum {
+	position:absolute;
+	top:-8px;
+	left:0px;
+	right:0px;
+	opacity:1;
+	font-size:36px;
+	color:#fff;
+	text-align:center;
+	text-shadow:0px 0px 1px #000,2px 2px 0px #000,-2px 2px 0px #000,2px -2px 0px #000,-2px -2px 0px #000;
+}
+
+
+
+
+.char {
+	display:block;
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	width:28px;
+	background-size:contain;
+	background-repeat:no-repeat;
+	background-position:50%;
+}
+
+
+#char1 {
+	left:40px;
+	-webkit-filter:drop-shadow(2px 1px 0px #001);
+}
+#char2 {
+	right:40px;
+	-webkit-filter:drop-shadow(2px 1px 0px #001);
+}
+
+
+.flag {
+	position:absolute;
+	top:7px;
+	width:33px;
+	height:20px;
+	background-size:cover;
+	background-position:50% 50%;
+	background-repeat:no-repeat;
+	border:1px solid #000;
+}
+
+#flag1 {
+	right:40px;
+}
+#flag2 {
+	left:40px;
+}
+
+
+
+
+
+.state {
+	position:absolute;
+	bottom:-20px;
+	font-size:12px;
+	text-transform:uppercase;
+	font-family:arial;
+	font-weight:bold;
+	color:#fff;
+	opacity:1;
+	letter-spacing:1px;
+	text-shadow:0px 0px 4px #000,0px 0px 6px #000,0px 0px 5px #000,0px 0px 6px #000;
+}
+#state1 {
+	left:6px;
+	right:6px;
+}
+#state2 {
+	left:6px;
+	right:6px;
+}
+
+.state .winners,
+.state .losers {
+	display:none;
+}
+
+.state.winners .winners,
+.state.losers .losers {
+	display:block;
+}
+
+
+#roundinfo {
+	position:absolute;
+	left:3px;
+	right:3px;
+	top:7px;
+	text-align:center;
+	text-transform:uppercase;
+	color:#fff;
+	font-size:16px;
+	text-shadow:0px 0px 1px #000,2px 2px 0px #000,-2px 2px 0px #000,2px -2px 0px #000,-2px -2px 0px #000;
+}
+#event {
+	position:absolute;
+	left:3px;
+	width:223px;
+	top:0px;
+}
+#round {
+	position:absolute;
+	right:3px;
+	width:223px;
+	top:0px;
+}
+
+#sponsors {
+	position:absolute;
+	left:15px;
+	bottom:33px;
+	width:207px;
+	height:161px;
+}
+#sponsors .item {
+	position:absolute;
+	left:15px;
+	right:15px;
+	top:15px;
+	bottom:15px;
+	background-size:contain;
+	background-repeat:no-repeat;
+	background-position:50% 50%;
+	opacity:0;
+	transition:opacity .5s;
+}

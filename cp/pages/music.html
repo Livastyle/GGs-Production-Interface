@@ -1,0 +1,39 @@
+<script type="text/javascript" src="js/musicplayer.js"></script>
+
+
+<div id="music-main">
+	<div id="music-player" class="unselectable">
+		<div class="buttons">
+			<button id="mp-prev-btn"><img src="img/mp-prev.png" alt="" /></button>
+			<button id="mp-stop-btn" disabled><img src="img/mp-stop.png" alt="" /></button>
+			<button id="mp-play-btn" onclick="mpPlay();"><img src="img/mp-play.png" alt="" /></button>
+			<button id="mp-pause-btn" onclick="mpPause();" disabled><img src="img/mp-pause.png" alt="" /></button>
+			<button id="mp-next-btn" onclick="mpNext();"><img src="img/mp-next.png" alt="" /></button>
+			<button id="mp-mute-btn"><img src="img/mp-mute.png" alt="" /></button>
+			<button id="mp-unmute-btn" disabled><img src="img/mp-unmute.png" alt="" /></button>
+			<button id="mp-shuffle-btn"><img src="img/mp-shuffle.png" alt="" /></button>
+		</div>
+		<div class="progress_outer">
+			<div class="progress_inner"></div>
+			<div class="progress_text"></div>
+		</div>
+		<div class="progress_timer">
+			<div class="item current">00:53</div>
+			<div class="sep">/</div>
+			<div class="item total">03:45</div>
+		</div>
+	</div>
+	
+	<div id="music-playlist-tracklist" class="tracklist"></div>
+	<div id="music-tracklist" class="tracklist"></div>
+	
+</div>
+
+
+
+<audio id="music-player-audio" />
+
+
+<script type="text/javascript">
+//initMusicPlayer();
+</script>

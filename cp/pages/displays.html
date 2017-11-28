@@ -1,0 +1,50 @@
+<div id="displays-client-list"></div>
+
+<script type="text/javascript">
+
+$(window).on('wsconnected', function(){
+	sendDataToWebsocket({"type":"auth"}, "display");
+});
+$(window).on('ws-display', function(data){
+	var type = data.msg.type;
+	var value = data.msg.value;
+	if(type == 'connect'){
+		displaysConnect(value);
+	}
+	
+});
+
+function displaysConnect(client){
+	console.log(client);
+	var elmID = "display_item_"+client.clientID;
+	if($("#"+elmID).length == 0){
+		var $item = $('<div id="'+elmID+'" class="item"></div>');
+		$item.append('<div class="id"></div>');
+		$item.append('<div class="resolution"></div>');
+		var $options = $('<div class="options" />');
+		$options.append('<button onclick="displaysReload(\''+client.clientID+'\');">Reload</button>');
+		$options.append('<button onclick="displaysIdentify(\''+client.clientID+'\');">Identify</button>');
+		$options.append('<button onclick="displaysSetup(\''+client.clientID+'\');">Setup</button>');
+		$options.appendTo($item);
+		$("#displays-client-list").append($item);
+	}
+	
+	$("#"+elmID+" .id").text(client.clientID);
+	$("#"+elmID+" .resolution").text(client.resolution.width + "x" + client.resolution.height);
+	
+}
+
+function displaysSetup(clientID){
+	sendDataToWebsocket({"type":"setup","value":{"clientID":clientID,"name":"sideprojectorleft"}}, "display");
+}
+
+function displaysIdentify(clientId){
+	sendDataToWebsocket({"type":"identify","value":clientId}, "display");
+}
+function displaysReload(clientId){
+	if(typeof(clientId) == 'undefined')
+		clientId = null;
+	sendDataToWebsocket({"type":"reload","value":clientId}, "display");
+}
+
+</script>

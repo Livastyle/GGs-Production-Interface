@@ -1,0 +1,158 @@
+
+@font-face { 
+	font-family: cartonslab;
+	src: url('./Carton-Slab.otf'); 
+}
+
+
+#main {
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:1280px;
+	height:720px;
+	overflow:hidden;
+	font-family: cartonslab;
+
+	background: linear-gradient(45deg, #3190e1 35%,#385487 100%);
+}
+
+#layer {
+	position:absolute;
+	left:0px;
+	top:0px;
+	z-index:10;
+	height:720px;
+	width:970px;
+	will-change: transform;
+	border-right:10px solid #eda91c;
+	
+	transform:skew(-20deg) translateX(-1200px);
+	box-shadow:0px 0px 4px #000;
+	
+	background: linear-gradient(-45deg, #ffc323 5%,#d99622 100%);
+	overflow:hidden;
+}
+
+.visible #layer {
+	transition:all 1s 1s;
+	transform:skew(-20deg) translateX(-200px);
+}
+
+
+#layer_inner {
+	transform:skew(20deg) translateX(200px);
+	position:absolute;
+	left:0px;
+	top:0px;
+	right:0px;
+	bottom:0px;
+}
+
+#bgtext {
+	position:absolute;
+	left:-20px;
+	top:-50px;
+	width:200px;
+	white-space:normal;
+	font-size:400px;
+	transform-origin:50%;
+	color:#ffe400;
+	opacity:0.2;
+}
+
+#uppertext {
+	position:absolute;
+	top:30px;
+	left:20px;
+	right:200px;
+	white-space:normal;
+	font-size:180px;
+	color:#566fa7;
+	-webkit-text-stroke: 3px #fff;
+	text-shadow:-5px -5px 0px #566fa7,
+	5px 5px 0px #566fa7,
+	5px -5px 0px #566fa7,
+	-5px 5px 0px #566fa7,
+	0px 5px 0px #566fa7,
+	5px 0px 0px #566fa7,
+	-5px 0px 0px #566fa7,
+	11px 10px 3px rgba(0,0,0,0.1);
+}
+
+#lowertext {
+	position:absolute;
+	left:10px;
+	top:460px;
+	width:670px;
+	text-align:center;
+	white-space:normal;
+	font-size:60px;
+	-webkit-text-stroke: 2px #000;
+	
+}
+#countdown {
+	position:absolute;
+	left:10px;
+	top:560px;
+	width:670px;
+	text-align:center;
+	white-space:normal;
+	font-size:50px;
+	-webkit-text-stroke: 2px #000;
+}
+
+#sponsor_line {
+	position:absolute;
+	left:0px;
+	bottom:10px;
+	width:1423px;
+	height:66px;
+	will-change: auto;
+	background-color:rgba(0,0,0,0.1);
+	background-image:url('staytuned_sponsor_line.png');
+	background-repeat:no-repeat;
+	background-position:84% 50%;
+	transform:translateX(0px);
+}
+.visible #sponsor_line {
+	transition:all 1s 1.4s;
+	transform:translateX(-700px);
+}
+
+#saltyarena {
+	position:absolute;
+	right:-70px;
+	top:-10px;
+	z-index:5;
+	width:607px;
+	height:540px;
+	opacity:0;
+	background:url('staytuned_saltyarena_logo.png');
+	will-change: transform;
+	transform:translateX(-400px);
+}
+.visible #saltyarena {
+	transition:transform 1s 0.9s, opacity 2s 0s;
+	opacity:0.4;
+	transform:translateX(0px);
+}
+
+
+#saltlogo {
+	position:absolute;
+	right:25px;
+	bottom:25px;
+	z-index:9;
+	width:494px;
+	height:208px;
+	opacity:0;
+	transform:translateX(600px);
+	background:url('staytuned_salt_logo.png');
+	
+}
+.visible #saltlogo {
+	transition:all 1s 0.7s;
+	opacity:1;
+	transform:translateX(0px);
+}

@@ -1,0 +1,283 @@
+
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script type="text/javascript" src="./../cp/js/jquery-3.1.1.min.js"></script>
+		<script type="text/javascript">
+		window.onload = init;
+		var ws;
+		function init(){
+			getVmixData();
+			startWS('ws://'+location.host+':5000', process);
+		}
+		function startWS(websocketServerLocation, callback){
+			if(ws == undefined || ws.readyState == undefined || ws.readyState === ws.CLOSED){
+				ws = new WebSocket(websocketServerLocation);
+				ws.onmessage = function(evt) { 
+					var wsdata = JSON.parse(evt.data);
+					if(wsdata.type == 'scoreboardinfo')
+						callback(wsdata.data);
+				};
+				ws.onclose = function(){
+					setTimeout(function(){startWS(websocketServerLocation)}, 5000);
+				};
+			}
+		}
+		
+		function process(data){
+			var doubles = data.playstyle == "doubles";
+			
+			$("#round").text(data.round);
+			$("#event").text(data.event);
+			
+			$("#p1 .nickname").text(data.player[1].nickname);
+			$("#p2 .nickname").text(data.player[2].nickname);
+			$("#p1 .character").css("background-image","url('./../assets/thumbnail/"+data.game+"/default/"+data.player[1].character.cid+".png')");
+			$("#p2 .character").css("background-image","url('./../assets/thumbnail/"+data.game+"/default/"+data.player[2].character.cid+".png')");
+			if(doubles){
+				$("#p12 .nickname").text(data.player[12].nickname);
+				$("#p22 .nickname").text(data.player[22].nickname);
+				$("#p12 .character").css("background-image","url('./../assets/thumbnail/"+data.game+"/default/"+data.player[12].character.cid+".png')");
+				$("#p22 .character").css("background-image","url('./../assets/thumbnail/"+data.game+"/default/"+data.player[22].character.cid+".png')");
+				$("#main").addClass("doubles");
+			}else{
+				$("#main").removeClass("doubles");
+			}
+			
+			
+		}
+		
+		function getVmixData(){
+		
+			$.get( "http://10.10.11.3:8088/api", function(xml) {
+				var rec = $(xml).find("vmix>recording").text();
+				var recDuration = $(xml).find("vmix>recording").attr("duration");
+				
+				if(rec == "True"){
+					$("#recording").addClass("on");
+					
+					$("#recording .duration").text(secToMinSecStr(recDuration));
+					
+				}else{
+					$("#recording").removeClass("on");
+				}
+			}).always(function() {
+				setTimeout(getVmixData, 1000);
+			});
+
+		}
+		
+		function secToMinSecStr(sec){
+			var min = Math.floor(sec / 60);
+			var sec = sec % 60;
+			min = (min < 10 ? '0'+min : min).toString();
+			sec = (sec < 10 ? '0'+sec : sec).toString();
+			return min+":"+sec;
+		}
+		
+		</script>
+		<style type="text/css">
+		body {
+			background:#000;
+			color:#fff;
+			font-family:segoe ui, arial;
+		}
+		
+		#main {
+			position:fixed;
+			left:0px;
+			right:0px;
+			top:0px;
+			bottom:0px;
+			
+		}
+		
+		#top {
+			position:absolute;
+			left:0px;
+			right:0px;
+			top:0px;
+			z-index:10;
+			height:100px;
+			background:#222;
+			border-bottom:1px solid #aaa;
+		}
+		
+		#recording {
+			position:absolute;
+			left:0px;
+			top:0px;
+			bottom:0px;
+		}
+		#recording .icon {
+			position:absolute;
+			left:30px;
+			top:15px;
+			width:70px;
+			height:70px;
+			border-radius:50%;
+			background:#111;
+			box-shadow:inset 2px 2px 5px #000;
+		}
+		#recording.on .icon {
+			background:#f00;
+		}
+		#recording .label {
+			position:absolute;
+			left:130px;
+			top:-6px;
+			width:450px;
+			font-size:50px;
+			text-transform:uppercase;
+			opacity:0;
+		}
+		#recording.on .label.true {
+			opacity:1;
+			color:#faa;
+			text-shadow:0px 0px 10px #f00;
+		}
+		#recording:not(.on) .label.false {
+			opacity:1;
+			color:#444;
+			top:16px;
+		}
+		#recording .duration {
+			position:absolute;
+			left:130px;
+			bottom:-5px;
+			color:#fff;
+			width:450px;
+			font-size:50px;
+			text-transform:uppercase;
+			opacity:0;
+		}
+		#recording.on .duration {
+			opacity:1;
+		}
+		#recording .duration:after {
+			content:'Video duration';
+			margin-left:6px;
+			font-size:10px;
+		}
+		
+		#p1,
+		#p2,
+		#p12,
+		#p22 {
+			position:absolute;
+			width:calc(50% - 50px);
+			text-align:center;
+			font-size:60px;
+		}
+		#p12,
+		#p22 {
+			opacity:0;
+		}
+		#main.doubles #p12,
+		#main.doubles #p22  {
+			opacity:1;
+		}
+		
+		#p1,#p12	{ left:0px; }
+		#p2,#p22	{ right:0px;}
+		#p1,#p2		{ top:350px; }
+		#main.doubles #p1, #main.doubles #p2		{ top:250px; }
+		#p12,#p22	{ top:470px;}
+		
+		.nickname {
+			position:relative;
+			text-shadow:0px 0px 4px #000,0px 0px 4px #000,0px 0px 14px #000,0px 0px 14px #000,0px 0px 14px #000;
+		}
+		.character {
+			position:absolute;
+			top:-200px;
+			bottom:-200px;
+			width:100%;
+			background-size:contain;
+			background-repeat:no-repeat;
+			opacity:0.5;
+		}
+		#main.doubles .character {
+			top:-70px;
+			bottom:-70px;
+		}
+		#p1 .character,
+		#p12 .character{ 
+			left:0px; 
+			background-position:left;
+		}
+
+		#p2 .character,
+		#p22 .character{ 
+			right:0px; 
+			background-position:left;
+			-webkit-transform:scaleX(-1);
+		}
+
+		
+		#vs {
+			position:absolute;
+			bottom:320px;
+			left:0px;
+			right:0px;
+			font-size:80px;
+			text-align:center;
+		}			
+		#event {
+			position:absolute;
+			bottom:100px;
+			left:0px;
+			right:0px;
+			font-size:40px;
+			text-align:center;
+		}		
+		#round {
+			position:absolute;
+			bottom:20px;
+			left:0px;
+			right:0px;
+			font-size:70px;
+			text-align:center;
+		}
+		
+		</style>
+	</head>
+	<body>
+		<div id="main">
+			<div id="top">
+				<div id="time">00:00</div>
+				<div id="recording">
+					<div class="icon"></div>
+					<div class="label true">Recording ON</div>
+					<div class="label false">Recording OFF</div>
+					<div class="duration">00:00</div>
+				</div>
+			</div>
+			
+			<div id="p1">
+				<div clasS="character"></div>
+				<div clasS="nickname"></div>
+			</div>
+			<div id="p12">
+				<div clasS="character"></div>
+				<div clasS="nickname"></div>
+			</div>			
+			<div id="p2">
+				<div clasS="character"></div>
+				<div clasS="nickname"></div>
+			</div>
+			<div id="p22">
+				<div clasS="character"></div>
+				<div clasS="nickname"></div>
+			</div>
+			<div id="round"></div>
+			<div id="event"></div>
+			<div id="vs">VS</div>
+			
+		</div>
+
+	</body>
+</html>

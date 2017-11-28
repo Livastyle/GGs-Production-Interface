@@ -1,0 +1,160 @@
+#main {
+	position:absolute;
+	left:210px;
+	bottom:50px;
+	width:860px;
+	height:113px;
+}
+
+#left,
+#right {
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	width:50%;
+	overflow:hidden;
+}
+#left {
+	left:0px;
+}
+#right {
+	right:0px;
+}
+
+.cf {
+	position:absolute;
+	top:32px;
+	width:400px;
+	height:68px;
+	background:#181818;
+	transition:all 400ms 700ms;
+}
+#cf1 {
+	left:24px;
+	transform:skew(12deg) translateX(420px);
+}
+#cf2 {
+	right:24px;
+	transform:skew(-12deg) translateX(-420px);
+}
+#main.visible #cf1 {
+	transform:skew(12deg) translateX(0px);
+}
+#main.visible #cf2 {
+	transform:skew(-12deg) translateX(0px);
+}
+#main.visible .cf {
+	transition:all 400ms 400ms;
+}
+
+
+.cnbg {
+	position:absolute;
+	top:0px;
+	width:340px;
+	height:40px;
+	background-size:cover;
+	transition:all 700ms 400ms;
+}
+#cnbg1 {
+	left:4px;
+	transform:translateX(400px);
+	background-image:url('caster/bg_left.png');
+}
+#cnbg2 {
+	right:4px;
+	transform:translateX(-400px);
+	background-image:url('caster/bg_right.png');
+}
+#main.visible .cnbg {
+	transform:translateX(0px);
+	transition:all 700ms 300ms;
+}
+.cn {
+	position:absolute;
+	left:30px;
+	right:30px;
+	top:9px;
+	font-size:20px;
+	font-weight:bold;
+	text-align:center;
+}
+#cn1 {
+	transform:skew(-12deg);
+}
+#cn2 {
+	transform:skew(12deg);
+}
+.ct {
+	position:absolute;
+	width:200px;
+	bottom:4px;
+	text-align:center;
+	font-weight:bold;
+	font-size:16px;
+}
+.ct span {
+	position:relative;
+	padding-left:35px;
+}
+.ct span:before {
+	content:'';
+	position:absolute;
+	left:0px;
+	top:-3px;
+	width:28px;
+	height:22px;
+	background:url('caster/twitter.png');
+}
+#ct1 {
+	left:70px;
+	transform:skew(-12deg);
+}
+#ct2 {
+	right:70px;
+	transform:skew(12deg);
+}
+
+#logofield {
+	position:absolute;
+	top:30px;
+	left:365px;
+	right:365px;
+	height:76px;
+	opacity:0;
+	transform:translateY(50px);
+	transition:all 400ms 1s;
+}
+#main.visible #logofield {
+	opacity:1;
+	transform:translateY(0px);
+	transition:all 400ms 100ms;
+}
+#logofield:before,
+#logofield:after {
+	content:'';
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	width:80px;
+	z-index:3;
+	background:#181818;
+}
+#logofield:before {
+	left:0px;
+	transform:skew(12deg);
+}
+#logofield:after {
+	right:0px;
+	transform:skew(-12deg);
+}
+#logo {
+	position:absolute;
+	z-index:5;
+	left:-9px;
+	right:-9px;
+	top:-15px;
+	height:80px;
+	background-image:url('caster/logo.png');
+	background-position:50% 0%;
+}

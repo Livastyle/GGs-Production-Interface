@@ -1,0 +1,99 @@
+#main {
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:1280px;
+	height:720px;
+	background:url('multiview/bg.png');
+}
+#topleft {
+	position:absolute;
+	left:40px;
+	top:15px;
+	width:400px;
+	height:120px;
+	background:url('logos/SBSPosibleLogo2.png');
+	background-size:contain;
+	background-repeat:no-repeat;
+	background-position:50%;
+}
+#topright {
+	position:absolute;
+	right:40px;
+	top:10px;
+	width:400px;
+	height:130px;
+	background:url('logos/Citilab.png');
+	background-size:contain;
+	background-repeat:no-repeat;
+	background-position:50%;
+}
+
+#lowerlogos {
+	position:absolute;
+	left:10px;
+	right:10px;
+	bottom:10px;
+	height:190px;
+}
+#lowerlogos > div {
+	position:absolute;
+	top:0px;
+	bottom:0px;
+}
+#lowerlogos > .left {
+	left:120px;
+	width:300px;
+}
+#lowerlogos > .right {
+	right:120px;
+	width:300px;
+}
+#lowerlogos > .mid {
+	left:480px;
+	width:300px;
+}
+.item {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	background-size:contain;
+	background-repeat:no-repeat;
+	background-position:50%;
+	opacity:1;
+	transform:translateX(0px);
+	transition:all 400ms 200ms;
+}
+.ggs {
+	background-image:url('logos/GGS.png');
+	transform:scale(.7);
+	transition:all 1s;
+}
+#main.visible .ggs {
+	transform:scale(1);
+}
+.zowie {
+	background-image:url('logos/ZowieWhite.png');
+}
+.nextn {
+	background-image:url('logos/NextN.png');
+}
+.pressfire {
+	background-image:url('logos/pressfire.png');
+}
+.splyce {
+	background-image:url('logos/splyce2.png');
+}
+
+.left .item.hidden {
+	opacity:0;
+	transform:translateX(-100px);
+	transition:all 400ms;
+}
+.right .item.hidden {
+	opacity:0;
+	transform:translateX(100px);
+	transition:all 400ms;
+}

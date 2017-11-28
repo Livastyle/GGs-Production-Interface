@@ -1,0 +1,7 @@
+{"label":"Default Theme","resolution":[1280,720],"note":"Here we can add some infos about this specific theme.","ver":"0.1","previewpath":"snapshots",
+"fields":[
+	{"name":"overlaytop","label":"Overlay Top","type":"text","checkbox":true,"frontpage":true},
+	{"name":"tournament","type":"text","checkbox":false},
+	{"name":"selectexample","type":"dropdown","options":["test 1","test 2","test 3"],"checkbox":false},
+	{"name":"selectexample2","type":"dropdown","options":[{"label":"eins","value":"1"},{"label":"zwei","value":"2"},{"label":"drei","value":"3"}],"checkbox":false}
+]}

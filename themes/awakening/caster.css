@@ -1,0 +1,136 @@
+
+#main {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	
+	font-family:segoe ui;
+	font-weight:bold;
+	font-size:16px;
+}
+#field {
+	position:absolute;
+	left:0px;
+	right:0px;
+	bottom:60px;
+	height:100px;
+}
+
+#cf1,
+#cf2 {
+	position:absolute;
+	top:20px;
+	height:70px;
+	width:240px;
+	border:1px solid #000;
+	background: linear-gradient(to bottom, rgba(178,26,21,1) 1%,rgba(127,26,21,1) 100%);
+	transform:scaleX(0);
+	transition:all .2s .5s;
+}
+#cf1 {
+	left:200px;
+}
+#cf2 {
+	right:200px;
+}
+#main.visible #cf1,
+#main.visible #cf2 {
+	transform:scaleX(1);
+	transition:all .3s .2s;
+}
+
+.plate {
+	position:absolute;
+	left:-5px;
+	right:-5px;
+	top:4px;
+	height:30px;
+	background:#fff;
+	border:2px solid #000;
+	transform:scaleY(0);
+	transition:all .5s .1s;
+}
+#main.visible .plate {
+	transform:scaleY(1);
+	transition:all .3s .3s;
+}
+#cn1,
+#cn2 {
+	position:absolute;
+	top:0px;
+	line-height:26px;
+	left:3px;
+	right:3px;
+	color:#000;
+	text-align:center;
+	font-size:20px;
+}
+
+.team {
+	color:#888;
+}
+
+#cflag1,
+#cflag2 {
+	position:absolute;
+	left:5px;
+	bottom:5px;
+	width:36px;
+	height:20px;
+	background:#fff;
+	background-size:cover;
+	background-position:50%;
+	border:1px solid #000;
+
+	transform:scale(0);
+	transition:all .5s .2s;
+}
+#main.visible #cflag1,
+#main.visible #cflag2 {
+	transform:scale(1);
+	transition:all .3s .5s;
+}
+
+
+#ct1,
+#ct2{
+	position:absolute;
+	top:42px;
+	left:50px;
+	right:5px;
+	
+	height:24px;
+	line-height:26px;
+	text-align:center;
+	font-size:16px;
+	font-weight:bold;
+}
+
+#ct1 span,
+#ct2 span{
+	position:relative;
+	text-shadow:0px 0px 2px #000,0px 0px 4px #000;
+}
+
+#ct1 span:before,
+#ct2 span:before{
+	content:'';
+	position:absolute;
+	top:2px;
+	left:-24px;
+	width:20px;
+	height:20px;
+	background-image:url('logo_twitter.png');
+}
+
+#logo {
+	position:absolute;
+	bottom:0px;
+	left:580px;
+	width:120px;
+	height:87px;
+	background-image:url('eventlogo.png');
+}
+

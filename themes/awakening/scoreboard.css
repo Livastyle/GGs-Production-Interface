@@ -1,0 +1,235 @@
+
+
+#main {
+	position:fixed;
+	left:0px;
+	top:0px;
+	width:1280px;
+	height:720px;
+	font-family:segoe ui;
+	white-space:nowrap;
+	overflow:hidden;
+	color:#000;
+	text-align:center;
+	font-size:16px;
+}
+
+.playerside {
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	width:200px;
+	overflow:hidden;
+}
+#p1 {
+	left:0px;
+}
+#p2 {
+	right:0px;
+}
+
+.nickname {
+	position:absolute;
+	top:8px;
+	left:0px;
+	right:0px;
+	height:30px;
+	line-height:30px;
+	font-size:22px;
+	vertical-align:middle;
+	font-weight:bold;
+	color:#000;
+	transition:all .3s;
+}
+
+.nickname.hidden {
+	opacity:0;
+}
+.nickname .team {
+	color:#888;
+}
+
+
+
+
+.score {
+	position:absolute;
+	top:357px;
+}
+#score1 {
+	left:92px;
+	transform:skew(-25deg);
+}
+#score2 {
+	right:92px;
+	direction: rtl;
+	transform:skew(25deg);
+}
+.score .item {
+	display:inline-block;
+	width:8px;
+	opacity:0.5;
+	height:24px;
+	background:rgba(225,225,225,0.4);
+	border:2px solid #000;
+}
+.score .item.hidden {
+	display:none;
+}
+
+.score .item.active {
+	opacity:1;
+	background:#fff;
+}
+
+
+
+
+.char {
+	display:block;
+	position:absolute;
+	top:353px;
+	width:26px;
+	height:26px;
+	background-size:contain;
+	background-repeat:no-repeat;
+	background-position-y:40%;
+}
+
+#char1 {
+	left:50px;
+}
+#char2 {
+	right:50px;
+}
+
+
+.flag {
+	position:absolute;
+	top:353px;
+	width:36px;
+	height:24px;
+	background-size:cover;
+	background-position:50% 50%;
+	background-repeat:no-repeat;
+	border-radius:1px;
+	
+	border:1px solid #000;
+}
+
+#flag1 {
+	left:4px;
+}
+#flag2 {
+	right:4px;
+}
+
+
+
+
+
+.state {
+	position:absolute;
+	top:356px;
+	font-size:10px;
+	text-transform:uppercase;
+	font-weight:bold;
+	color:#fff;
+	opacity:1;
+	letter-spacing:0px;
+	text-shadow:0px 0px 3px #000,0px 0px 3px #000,0px 0px 3px #000,0px 0px 3px #000;
+}
+#state1 {
+	right:3px;
+}
+#state2 {
+	left:3px;
+}
+
+.state .winners,
+.state .losers {
+	display:none;
+}
+
+.state.winners .winners,
+.state.losers .losers {
+	display:block;
+}
+
+
+#roundinfo {
+	position:absolute;
+	left:510px;
+	right:510px;
+	top:10px;
+	height:22px;
+	line-height:22px;
+	vertical-align:middle;
+	font-size:14px;
+	font-weight:bold;
+	color:#000;
+	border:2px solid #000;
+	background:#fff;
+	text-align:center;
+	text-transform:uppercase;
+	overflow:hidden;
+}
+#bracket,
+#round {
+	position:absolute;
+	left:0px;
+	right:0px;
+	transition:.5s;
+}
+#bracket {
+	transform:translateY(-30px);
+}
+#round {
+	transform:translateY(30px);
+}
+#bracket.visible,
+#round.visible {
+	transform:translateY(0px);
+}
+
+#sponsors {
+	position:absolute;
+	left:10px;
+	bottom:10px;
+	width:178px;
+	height:150px;
+	background:rgba(90,90,90,1);
+	border:2px solid #000;
+}
+#sponsors:before {
+	content:'';
+	position:absolute;
+	top:0px;
+	left:0px;
+	right:0px;
+	bottom:0px;
+	border:1px solid #fff;
+}
+#sponsors:after {
+	content:'IN PARTNERSHIP WITH';
+	top:-15px;
+	position:absolute;
+	left:-2px;
+	right:-2px;
+	font-weight:bold;
+	font-size:12px;
+	background:#000;
+	color:#fff;
+}
+#sponsors .item {
+	position:absolute;
+	left:15px;
+	right:15px;
+	top:15px;
+	bottom:15px;
+	background-size:contain;
+	background-repeat:no-repeat;
+	background-position:50% 50%;
+	opacity:0;
+	transition:opacity .5s;
+}

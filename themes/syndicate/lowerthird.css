@@ -1,0 +1,127 @@
+@font-face {
+	font-family:BebasNeue;
+	src:url('BebasNeue.otf');
+}
+
+#main {
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:1280px;
+	height:720px;
+	font-family:BebasNeue;
+}
+
+@keyframes bganim {
+    from {background-position:0% 0%;}
+    to {background-position:100% 0%;}
+}
+
+
+#field {
+	position:absolute;
+	left:130px;
+	bottom:80px;
+	width:0px;
+	height:90px;
+
+	background: linear-gradient(90deg, rgba(11,11,11,1) 50%,rgba(1,1,1,1) 50.1%);
+	border-right:15px solid #153d6f;
+	
+	background-size:40px 100%;
+	background-position:0% 0%;
+	color:#fff;
+	transform:skew(20deg);
+	
+    animation-name: bganim;
+    animation-duration: 24s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+	animation-play-state: paused;
+	box-shadow:1px 1px 6px #000;
+	overflow:hidden;
+	opacity:0;
+	transition:width .5s, opacity .5s;
+	
+}
+#main.visible:not(.striking) #field {
+	transition:width .5s .5s, opacity .3s .3s;
+	width:560px;
+	animation-play-state: running;
+	opacity:1;
+}
+
+#field .inner {
+	position:absolute;
+	left:0px;
+	width:560px;
+	top:0px;
+	bottom:0px;
+	background: linear-gradient(to bottom, rgba(61,61,61,0.48) 0%,rgba(61,61,61,0) 25%,rgba(61,61,61,0) 72%,rgba(61,61,61,0.52) 100%);
+}
+
+#logo {
+	position:absolute;
+	left:65px;
+	bottom:60px;
+	height:140px;
+	width:140px;
+	background-image:url('img/syndicate.png');
+	background-size:contain;
+	background-position:50%;
+	background-repeat:no-repeat;
+	transform:scale(1.5);
+	opacity:0;
+	transition:all .4s .3s;
+}
+#main.visible:not(.striking) #logo {
+	transform:scale(1);
+	opacity:1;
+	transition:all .5s 0s;
+}
+@keyframes logorayanim {
+    0% {opacity:0;transform:scale(.8);}
+    15% {opacity:1;transform:scale(1);}
+    100% {opacity:0;transform:scale(.8);}
+}
+#logo-rays {
+	position:absolute;
+	left:45px;
+	bottom:40px;
+	height:180px;
+	width:180px;
+	opacity:0;
+	transform:scale(.8);
+	background-image:url('img/logo_rays.png');
+	background-size:contain;
+	background-position:50%;
+	background-repeat:no-repeat;
+    animation-duration: 4s;
+    animation-delay: 0s;
+    animation-timing-function: linear;
+    animation-iteration-count: 1;
+	animation-fill-mode: forwards;
+}
+#main.visible:not(.striking) #logo-rays {
+    animation-name: logorayanim;
+}
+
+#upper {
+	position:absolute;
+	left:100px;
+	top:4px;
+	right:20px;
+	font-size:25px;
+
+	color:#fff;
+	text-shadow:0px 0px 3px #aaa;
+	transform:skew(-20deg);
+}
+#lower {
+	position:absolute;
+	left:100px;
+	bottom:0px;
+	right:20px;
+	font-size:50px;
+	transform:skew(-20deg);
+}

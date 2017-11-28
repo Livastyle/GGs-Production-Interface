@@ -1,0 +1,59 @@
+#main {
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:1280px;
+	height:720px;
+	background:url('backbg.png');
+	background:#000;
+}
+#logos {
+	position:absolute;
+	left:100px;
+	right:100px;
+	top:100px;
+	bottom:100px;
+	
+}
+
+#logos .item {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	background-size:contain;
+	background-repeat:no-repeat;
+	background-position:50%;
+	opacity:0;
+	transition:all 400ms 200ms;
+}
+
+.sbs {
+	background:url('logos/SBSPosibleLogo2.png');
+}
+.citi {
+	background:url('logos/Citilab.png');
+}
+
+.ggs {
+	background-image:url('logos/GGS.png');
+}
+.zowie {
+	background-image:url('logos/ZowieWhite.png');
+}
+.nextn {
+	background-image:url('logos/NextN.png');
+}
+.pressfire {
+	background-image:url('logos/pressfire.png');
+}
+.splyce {
+	background-image:url('logos/splyce2.png');
+}
+
+
+#logos .item.visible {
+	opacity:1;
+	transition:all 400ms 400ms;
+}

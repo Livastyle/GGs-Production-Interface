@@ -1,0 +1,138 @@
+
+<button onclick="showTeamsEditPanel(0);">Add Team</button>
+
+
+<div id="teamlist"><table></table></div>
+
+<div id="teams-edit-panel" class="modal">
+	
+	<div id="teams-edit-info">
+	
+		<div>
+			<div class="label">Team Prefix</div>
+			<input type="text" class="def" id="team-edit-prefix" style="width:100px;" />
+		</div>
+		<div>
+			<div class="label">Teamname</div>
+			<input type="text" class="def" id="team-edit-name" style="width:400px;" />
+		</div>
+	</div>
+	
+	<div id="teams-edit-logo-section">
+		<div id="teams-edit-logos" ></div>
+		<div class="label">Add Team Logo</div>
+		<input type="file" value="" class="def" id="team-edit-file" />
+		<button onclick="uploadTeamLogo();">Upload</button>
+	</div>
+
+	<div style="position:absolute;bottom:5px;">
+		<button onclick="saveTeamEntry();" class="def">Save</button>
+		<button onclick="hideModal();" class="def">Cancel</button>
+	</div>
+	<input type="hidden" id="team-edit-tid" value="0" />
+</div>
+
+
+<script type="text/javascript">
+$(window).on('refreshteamdatabase', function (e) {
+    if(e.state==1){
+		// clear and wait screen
+		$("#teamlist").addClass("loading");
+	}
+    if(e.state==2){
+		insertIntoTeamsList(teamdatabaselist);
+		$("#teamlist").removeClass("loading");
+	}
+});
+
+
+function insertIntoTeamsList(list){
+	var frag = document.createDocumentFragment();
+	for(k in teamdatabaselist){
+		var v = teamdatabaselist[k];
+		var html = '<tr>';
+		html += '<td><img src="./../assets/teams/logo.php?tid='+v.id+'&s=24&inline=1&bg=black" onerror="this.style.opacity=0;" alt="" /></td>';
+		html += '<td style="min-width:200px;">'+v.name+'</td>';
+		html += '<td>'+v.prefix+'</td>';
+		html += '<td><button onclick="showTeamsEditPanel('+v.id+');">Edit</button></td>';
+		html += '</tr>';
+		$(frag).append(html);
+	}
+	$("#teamlist table").html(frag).removeClass("loading");
+}
+
+
+function showTeamsEditPanel(teamID){
+	var teamObj = getTeamById(teamID);
+	if(!teamObj){
+		// deactivate logo section
+		$("#team-edit-name, #team-edit-prefix").val("");
+		$("#team-edit-tid").val(0);
+		$("#teams-edit-logos").html("");
+		$("#team-edit-logo-section *").prop("disabled", true);
+	}else{
+		// fetch available logos and display them
+		
+		$("#team-edit-name").val(teamObj.name);
+		$("#team-edit-prefix").val(teamObj.prefix);
+		$("#team-edit-tid").val(teamObj.id);
+		$("#teams-edit-logos").html('');
+		
+		loadAjax("teamlogolist", {"id":teamObj.id}, function(data){
+			console.log(data);
+			var html = '';
+			for(index in data.list){
+				var logo = data.list[index];
+				console.log(logo);
+				html += '<div class="item">'+
+				'<div class="options">'+
+				'<div class="teamlogotrigger trigger'+(logo.logo == 1 ? ' active' : '')+'" onclick="triggerClick(this,saveTeamLogoState,['+logo.id+',\'logo\','+teamObj.id+']);">Logo image</div>'+
+				'<div class="teaminlinetrigger trigger'+(logo.inline == 1 ? ' active' : '')+'" onclick="triggerClick(this,saveTeamLogoState,['+logo.id+',\'inline\','+teamObj.id+']);">Inline image</div>'+
+				'</div>'+
+				'<div class="image" style="background-image:url(\'./../assets/teams/'+teamObj.id+'/'+logo.filename+'\');"></div>'+
+				'<div class="image-info">'+logo.width+' x '+logo.height+'</div>'+
+				'</div>';
+			}
+			$("#teams-edit-logos").html(html);
+		});
+		$("#team-edit-logo-section *").prop("disabled", false);
+	}
+	showModal("teams-edit-panel");
+}
+
+function saveTeamLogoState(sender, value, params){
+	var [id, type, teamid] = params;
+	
+	if(value){
+		$("#teams-edit-logos .team"+type+"trigger").removeClass("active");
+		$(sender).addClass("active");
+	}
+	
+	loadAjax("saveteamlogostate", {"id":id,"state":(value ? 1 : 0),"type":type,"teamid":teamid}, function(data){
+		log(data);
+	});
+	
+	// TODO: send value incl logo id to server via ajax, to save changes
+
+}
+
+function saveTeamEntry(){
+	var id = $("#team-edit-tid").val();
+	var name = $("#team-edit-name").val();
+	var prefix = $("#team-edit-prefix").val();
+	loadAjax("saveteamentry", {"id":id,"name":name,"prefix":prefix}, function(data){
+		triggerGlobalEvent("teamdatabasechanged");
+		hideModal();
+	});
+}
+
+function uploadTeamLogo(){
+	var id = $("#team-edit-tid").val();
+	var file = $("#team-edit-file").prop('files')[0];
+	loadAjaxFileUpload("saveteamlogo", {"id":id}, file, function(data){
+		showTeamsEditPanel(id);
+	});
+}
+
+
+</script>

@@ -1,0 +1,31 @@
+#bg {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	background:#300;
+	
+background: rgb(169,3,41);
+background: linear-gradient(145deg, rgba(189,3,41,1) 0%,rgba(94,0,109,1) 100%);
+}
+#score {
+	position:absolute;
+	top:400px;
+	left:0px;
+	right:0px;
+	text-align:center;
+	font-size:900px;
+	transform:rotateZ(45deg);
+	font-family:impact;
+	-webkit-filter:drop-shadow(0px 0px 20px #faf);
+}
+#lines {
+	position:absolute;
+	left:50px;
+	right:50px;
+	top:-50px;
+	bottom:-50px;
+	border:15px solid #fff;
+	-webkit-filter:drop-shadow(0px 0px 20px #faf);
+}

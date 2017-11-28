@@ -1,0 +1,48 @@
+<select class="global_gamelist" id="gp-gameselect" onchange="gpSelectGame(this.value);" size="20"></select>
+<select id="gp-characterselect" disabled onchange="gpSelectCharacter(this.value);" size="20"></select>
+<select id="gp-costumeselect" disabled size="20"></select>
+
+<button onclick="showModal('gp-addGamePanel');">Add Game</button>
+<button id="gp-addcharacter-btn" onclick="showModal('gp-addCharacterPanel');" disabled>Add Character</button>
+<button id="gp-addcostume-btn" onclick="showModal('gp-addCostumePanel');" disabled>Add Costume</button>
+
+
+
+
+<div id="gp-addGamePanel" class="modal">
+	<div class="label">Full Game name</div>
+	<div><input type="text" value="" class="def" id="gp-addgame-name" /></div>
+	<div class="label">Shorten name</div>
+	<div><input type="text" value="" class="def" id="gp-addgame-short" /></div>
+	<div>
+		<button onclick="addGame(false);" class="def">Save</button>
+		<button onclick="addGame(true);" class="def">Save &amp; Exit</button>
+		<button onclick="hideModal();" class="def">Cancel</button>
+	</div>
+</div>
+<div id="gp-addCharacterPanel" class="modal">
+	<div class="label">Full Character name</div>
+	<div><input type="text" value="" class="def" id="gp-addcharacter-name" /></div>
+	<div class="label">Shorten name</div>
+	<div><input type="text" value="" class="def" id="gp-addcharacter-short" /></div>
+	<div class="label">Default Costume Icon</div>
+	<div><input type="file" value="" class="def" id="gp-addcharacter-file" /></div>
+	<div>
+		<button onclick="addCharacter(false);" class="def">Save</button>
+		<button onclick="addCharacter(true);" class="def">Save &amp; Exit</button>
+		<button onclick="hideModal();" class="def">Cancel</button>
+	</div>
+	<input type="hidden" value="0" id="gp-addcharacter-game" />
+</div>
+<div id="gp-addCostumePanel" class="modal">
+	<div class="label">Costume name (lower case, no space)</div>
+	<div><input type="text" value="" class="def" oninput="lowerCaseNoSpaceOnly(this);" id="gp-addcostume-name" /></div>
+	<div class="label">Costume Icon</div>
+	<div><input type="file" value="" class="def" id="gp-addcostume-file" /></div>
+	<div>
+		<button onclick="addCostume(false);" class="def">Save</button>
+		<button onclick="addCostume(true);" class="def">Save &amp; Exit</button>
+		<button onclick="hideModal();" class="def">Cancel</button>
+	</div>
+	<input type="hidden" value="0" id="gp-addcostume-characterid" />
+</div>

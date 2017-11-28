@@ -1,0 +1,91 @@
+#main {
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:1280px;
+	height:720px;
+}
+
+#board {
+	position:absolute;
+	left:100px;
+	bottom:80px;
+	width:600px;
+	height:200px;
+}
+#logo {
+	position:absolute;
+	left:0px;
+	bottom:0px;
+	width:200px;
+	height:121px;
+	background:url('lowerthird/logo.png');
+	background-size:contain;
+	background-repeat:no-repeat;
+	transition:all .8s 500ms;
+	opacity:0;
+	transform:scale(.8);
+}
+#main.visible #logo {
+	transition:all 1s 500ms;
+	opacity:1;
+	transform:scale(1);
+}
+#field {
+	position:absolute;
+	left:178px;
+	bottom:20px;
+	width:450px;
+	height:100px;
+	overflow:hidden;
+}
+#fieldinner {
+	position:absolute;
+	left:0px;
+	bottom:0px;
+	width:450px;
+	height:100px;
+	background:url('lowerthird/field.png');
+	background-size:contain;
+	background-repeat:no-repeat;
+	transform:translateX(-550px);
+	transition:all 1s 0s;
+}
+#main.visible #fieldinner {
+	transform:translateX(0px);
+	transition:all 1s 1s;
+}
+
+#upper {
+	position:absolute;
+	left:30px;
+	top:5px;
+	width:330px;
+	font-size:22px;
+	text-transform:uppercase;
+	font-weight:bold;
+	color:#000;
+	transition:all 200ms;
+}
+#lower {
+	position:absolute;
+	left:40px;
+	top:32px;
+	width:320px;
+	font-size:30px;
+	font-weight:bold;
+	color:#fff;
+	transition:all 200ms;
+}
+#note {
+	position:absolute;
+	left:30px;
+	top:79px;
+	width:320px;
+	font-size:12px;
+	font-weight:bold;
+	color:#aaa;
+}
+.hidden {
+	opacity:0;
+}

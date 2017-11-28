@@ -1,0 +1,242 @@
+<div id="schedule-list"></div>
+
+<div id="schedule-new-item">
+	<table>
+		<tr>
+			<th>Label</th>
+			<td>
+				<input type="text" id="schedule-new-label-input" value="" />
+			</td>
+		</tr>
+		<tr>
+			<th>Sub-Label</th>
+			<td>
+				<input type="text" id="schedule-new-sublabel-input" value="" />
+			</td>
+		</tr>
+		<tr>
+			<th>Category</th>
+			<td>
+				<select id="schedule-new-category-input">
+					<option value="start">Starting point</option>
+					<option value="tournament">Tournament</option>
+					<option value="interview">Interview</option>
+					<option value="panel">Panel / Analysis</option>
+					<option value="break">Break</option>
+					<option value="other">Other</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<th>Duration</th>
+			<td>
+				<input type="number" id="schedule-new-duration-h-input" min="0" max="100" value="" />H
+				<input type="number" id="schedule-new-duration-m-input" min="0" max="59" value="" />M
+			</td>
+		</tr>
+		<tr>
+			<th>Start</th>
+			<td>
+				<input type="date" id="schedule-new-date-input" value="" />
+				<input type="time" id="schedule-new-time-input" value="" />
+			</td>
+		</tr>
+		<tr>
+			<th>Position</th>
+			<td>
+				<select id="schedule-new-position-input">
+					<option value="end">at the end</option>
+					<option value="start">at the beginning</option>
+					<option value="after">after ...</option>
+					<option value="before">before ...</option>
+				</select>
+				<select id="schedule-new-position-beforeafter-input"></select>
+			</td>
+		</tr>
+		
+	</table>
+	<button onclick="scheduleAddNewItem();">Create</button>
+</div>
+
+<div id="schedule-item-template">
+	<div class="position"></div>
+	<div class="label"></div>
+	<div class="sublabel"></div>
+	<div class="eta"></div>
+	<div class="duration"></div>
+	<div class="category"></div>
+	<div class="options">
+		<button class="del">DEL</button>
+		<button class="up">UP</button>
+		<button class="down">DOWN</button>
+	</div>
+	
+</div>
+
+<style type="text/css">
+#schedule-list .item {
+	display:grid;
+	grid-template-columns:20px auto auto 200px 200px 200px 300px;
+}
+#schedule-list .item {
+	
+}
+
+</style>
+
+<script type="text/javascript">
+var scheduleItemTemplate = $("#schedule-item-template").clone().remove();
+var scheduleItemList = [];
+
+$(window).on("schedulelistchanged", loadScheduleDataFile);
+$(window).on("init", loadScheduleDataFile);
+
+/*
+state: 
+ 0 - upcoming
+ 1 - running
+ 2 - past
+*/
+
+function scheduleAddNewItem(){
+	var itemObj = {};
+	itemObj.label = $("#schedule-new-label-input").val().trim();
+	itemObj.sublabel = $("#schedule-new-sublabel-input").val().trim();
+	itemObj.category = $("#schedule-new-category-input").val().trim();
+	itemObj.date = $("#schedule-new-date-input").val().trim();
+	itemObj.time = $("#schedule-new-time-input").val().trim();
+	itemObj.state = 0;
+	var durationH = parseInt($("#schedule-new-duration-h-input").val().trim());
+	var durationM = parseInt($("#schedule-new-duration-m-input").val().trim());
+	
+	itemObj.duration = ((durationH*60)+durationM)*60;
+	
+
+	
+	var position = $("#schedule-new-position-input").val().trim();
+	var positionBeforeAfter = 0;
+	if($("#schedule-new-position-beforeafter-input").val())
+		positionBeforeAfter = parseInt($("#schedule-new-position-beforeafter-input").val());
+
+	switch(position){
+		case 'start':
+			itemObj.position = 0;
+		break;
+		case 'before':
+			itemObj.position = positionBeforeAfter;
+		break;
+		case 'after':
+			itemObj.position = positionBeforeAfter+1;
+		break;
+		case 'end':
+		default:
+			itemObj.position = scheduleItemList.length;
+	}
+	
+	scheduleItemList.splice(itemObj.position, 0, itemObj);
+	scheduleItemList = scheduleFixPositions(scheduleItemList);
+	
+	scheduleSave(scheduleItemList);
+	scheduleDisplayList(scheduleItemList);
+}
+
+function scheduleFixPositions(list){
+	for(let index in list)
+		list[index].position = index;
+	return list;
+}
+
+function scheduleSave(data){
+	sendDataToWebsocket(data, "schedule")
+	loadAjax("savescheduledatafile", {"theme":profile.theme, "list": JSON.stringify(data)}, function(data){
+		if(data.success){
+			log("Schedule saved", LOGTYPE.INFO);
+		}else{
+			alert(" error trying to save Schedule");
+		}
+	});	
+}
+
+
+function scheduleDisplayList(list){
+	var frag = document.createDocumentFragment();
+	var optionFrag = document.createDocumentFragment();
+	var timestamp = new Date();
+	list.forEach(function(item){
+		var $item = scheduleItemTemplate.clone().attr("id","").addClass("item");
+		
+		$item.find(".position").text(item.position);
+		$item.find(".label").text(item.label);
+		$item.find(".sublabel").text(item.sublabel);
+		$item.find(".category").text(item.category);
+		
+		var startETA = scheduleTimestampToTime(timestamp);
+		var endETA = "";
+		if(item.category == 'start'){
+			timestamp = new Date(item.date+" "+item.time);
+			startETA = scheduleTimestampToTime(timestamp);
+		}else{
+			$item.find(".duration").text(item.duration);
+			timestamp.setSeconds(timestamp.getSeconds() + item.duration);
+			endETA = scheduleTimestampToTime(timestamp);
+		}
+		
+		$item.find(".eta").text(startETA+" - "+endETA);
+		
+		
+		
+		
+		$item.find(".options .del").bind('click', function(){
+			scheduleDeleteItem(item.position);
+		});		
+		$item.find(".options .up").bind('click', function(){
+			scheduleMoveItem(item.position, -1);
+		});		
+		$item.find(".options .down").bind('click', function(){
+			scheduleMoveItem(item.position, 1);
+		});
+		
+		$item.appendTo(frag);
+		
+		var $option = $("<option />");
+		$option.val(item.position);
+		$option.text(item.label + " - "+item.sublabel);
+		$option.appendTo(optionFrag);
+	});
+	
+	
+	$("#schedule-new-position-beforeafter-input").html(optionFrag);
+	$("#schedule-list").html(frag);
+	
+}
+
+function scheduleDeleteItem(position){
+	scheduleItemList.splice(position, 1);
+	scheduleItemList = scheduleFixPositions(scheduleItemList);
+	scheduleSave(scheduleItemList);
+	scheduleDisplayList(scheduleItemList);
+}
+
+function loadScheduleDataFile(callback){
+	$.ajax({
+		type: "GET",
+		dataType : 'json',
+		cache: false,
+		async:true,
+		url : "./../themes/"+profile.theme+"/schedule-data.json"
+	}).done(function(data){
+		scheduleItemList = data;
+		scheduleDisplayList(data);
+	});	
+}
+
+function scheduleTimestampToTime(d){
+	var h = d.getHours();
+	var m = d.getMinutes();
+	h = (h<10 ? '0'+h : h);
+	m = (m<10 ? '0'+m : m);
+	return h+':'+m;
+}
+
+
+</script>

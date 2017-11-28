@@ -1,0 +1,217 @@
+@font-face { 
+	font-family: impactreg;
+	src: url('./leaguegothic-regular-webfont.ttf') format('truetype'); 
+}
+
+
+#main {
+	position:fixed;
+	left:0px;
+	top:0px;
+	width:1280px;
+	height:720px;
+	
+	white-space:nowrap;
+	overflow:hidden;
+	color:#000;
+	font-family: impactreg;
+	text-align:center;
+	font-size:16px;
+}
+
+.playerside {
+	position:absolute;
+	top:100px;
+	bottom:0px;
+	width:200px;
+}
+#p1 {
+	left:0px;
+}
+#p2 {
+	right:0px;
+}
+
+.nickname {
+	position:absolute;
+	top:10px;
+	left:20px;
+	right:20px;
+	height:40px;
+	line-height:40px;
+	font-size:30px;
+	color:#575f8f;
+	
+	transition:all .3s;
+}
+
+.nickname.hidden {
+	opacity:0;
+}
+
+.scorenum {
+	position:absolute;
+	top:310px;
+	opacity:0;
+	font-size:32px;
+	color:#fff;
+	text-shadow:1px 1px 5px #000;
+}
+#score1 {
+	right:10px;
+	text-align:right;
+}
+#score2 {
+	left:10px;
+	text-align:left;
+}
+
+.scorenumber .scorenum {
+	opacity:1;
+}
+
+
+.scorefield {
+	position:absolute;
+	top:326px;
+	left:8px;
+	right:8px;
+	font-size:0;
+	opacity:0;
+}
+
+.scoreboxes .scorefield {
+	opacity:1;
+}	
+
+
+
+#p1 .scorefield {
+	direction: rtl;
+	text-align:right;
+}
+
+#p2 .scorefield {
+	text-align:left;
+}
+
+.scorefield .item {
+	display:inline-block;
+	width:30px;
+	height:11px;
+	margin:2px;
+	background:rgba(0,0,0,0.4);
+	border:1px solid #fff;
+}
+.scorefield .item.filled {
+	box-shadow:0px 0px 5px #fff;
+	background:#fff;
+}
+
+
+.char {
+	display:block;
+	position:absolute;
+	top:328px;
+	width:43px;
+	height:60px;
+}
+
+#char1 {
+	left:0px;
+	transform:scaleX(-1);
+}
+#char2 {
+	right:0px;
+}
+
+
+.flag {
+	position:absolute;
+	top:358px;
+	width:33px;
+	height:20px;
+	background-size:contain;
+	background-position:50% 50%;
+	background-repeat:no-repeat;
+	
+	-webkit-filter:drop-shadow(1px 1px 1px #666);
+}
+
+#flag1 {
+	left:152px;
+}
+#flag2 {
+	right:152px;
+}
+
+.team {
+	position:absolute;
+	top:354px;
+	width:83px;
+	height:30px;
+	font-size:0;
+	text-align:center;
+}
+
+#team1 {
+	left:50px;
+}
+#team2 {
+	right:50px;
+}
+.team .item {
+	display:inline-block;
+	width:30px;
+	height:30px;
+	margin:0px 4px;
+	background-size:contain;
+	background-position:50% 50%;
+	background-repeat:no-repeat;
+}
+
+.state {
+	position:absolute;
+	top:16px;
+
+
+
+	font-size:22px;
+	font-family:impact;
+	color:#cb7478;
+
+	opacity:0.7;
+}
+#state1 {
+	right:6px;
+}
+#state2 {
+	left:6px;
+}
+
+.state .winners,
+.state .losers {
+	display:none;
+}
+
+.state.winners .winners,
+.state.losers .losers {
+	display:block;
+}
+
+
+#roundinfo {
+	position:absolute;
+	right:3px;
+	top:20px;
+	width:194px;
+	text-transform:uppercase;
+}
+#event {
+	color:#cb7478;
+	font-size:26px;
+}
+#round {
+	color:#575f8f;
+	font-size:28px;
+}

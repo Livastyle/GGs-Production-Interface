@@ -1,0 +1,140 @@
+
+
+
+<div id="sb-main" >
+	<div id="sb-left">
+	
+		<div class="player-top" id="sb-playerfield1">
+			<button class="sb-char-select-btn" id="sb-pc1" onclick="openCharacterSelectPanel(1,1);"></button>
+			<input type="text" class="playername" data-pf="1" oninput="triggerEvent('checkplayername',{pf:1});" tabindex="5" id="sb-pn1" placeholder="" list="playernamelist" autocomplete="on" />
+			<button class="multiname-btn" onclick="openMultiNamePlayerSelectPanel('1');" disabled>n</button>
+			<button class="editplayer-btn" onclick="openPlayerSidePanel($('#sb-pid1').val());" disabled></button>
+			<button class="smashgg-profile-btn" onclick="prepareSmashggProfile($('#sb-pid1').val(), this);" disabled></button>
+			<input type="hidden" value="" id="sb-pid1" />
+			<input type="hidden" value="" id="sb-charid1" />
+			<input type="hidden" value="" id="sb-charcostumeid1" />
+		</div>
+		<div class="player-bottom" id="sb-playerfield12">
+			<button class="sb-char-select-btn" id="sb-pc12" onclick="openCharacterSelectPanel(1,2);" ></button>
+			<input type="text" class="playername" data-pf="12" oninput="triggerEvent('checkplayername',{pf:12});" tabindex="6" id="sb-pn12" placeholder="" list="playernamelist" autocomplete="on" />
+			<button class="multiname-btn" onclick="openMultiNamePlayerSelectPanel('12');" disabled>n</button>
+			<button class="editplayer-btn" onclick="openPlayerSidePanel($('#sb-pid12').val());" disabled></button>
+			<button class="smashgg-profile-btn" onclick="prepareSmashggProfile($('#sb-pid12').val(), this);" disabled></button>
+			<input type="hidden" value="" id="sb-pid12" />
+			<input type="hidden" value="" id="sb-charid12" />
+			<input type="hidden" value="" id="sb-charcostumeid12" />
+		</div>
+		
+		<div class="player-data">
+			<div class="playerscore">
+				<button class="playerscore" onclick="modifyScore(1,-1);">-</button>
+				<input type="text" class="playerscore" onblur="numbersOnly(this);" onfocus="this.select();" id="sb-ps1" value="0" /> 
+				<button class="playerscore" onclick="modifyScore(1,1);">+</button>
+			</div>
+			<div class="gfwinnerslosers">
+				<div>
+					<input type="checkbox" value="1" onchange="changePlayerState(1,'winners');" id="pstate1-winners" />
+					<label for="pstate1-winners">Winners</label>
+				</div>
+				<div>
+					<input type="checkbox" value="1" onchange="changePlayerState(1,'losers');" id="pstate1-losers" />
+					<label for="pstate1-losers">Losers</label>
+				</div>
+				<input type="hidden" id="sb-pstate1" value="0" />
+			</div>
+		</div>
+	</div>
+	<div id="sb-right">
+		<div class="player-top" id="sb-playerfield2">
+			<button class="multiname-btn" onclick="openMultiNamePlayerSelectPanel('2');" disabled>n</button>
+			<button class="editplayer-btn" onclick="openPlayerSidePanel($('#sb-pid2').val());" disabled></button>
+			<button class="smashgg-profile-btn" onclick="prepareSmashggProfile($('#sb-pid2').val(), this);" disabled></button>
+			<input type="text" class="playername" data-pf="2" oninput="triggerEvent('checkplayername',{pf:2});" tabindex="7" id="sb-pn2" placeholder="" list="playernamelist" autocomplete="on" />
+			<button class="sb-char-select-btn" id="sb-pc2" onclick="openCharacterSelectPanel(2,1);"></button>
+			<input type="hidden" value="" id="sb-pid2" />
+			<input type="hidden" value="" id="sb-charid2" />
+			<input type="hidden" value="" id="sb-charcostumeid2" />
+		</div>
+		<div class="player-bottom" id="sb-playerfield22">
+			<button class="multiname-btn" onclick="openMultiNamePlayerSelectPanel('22');" disabled>n</button>
+			<button class="editplayer-btn" onclick="openPlayerSidePanel($('#sb-pid22').val());" disabled></button>
+			<button class="smashgg-profile-btn" onclick="prepareSmashggProfile($('#sb-pid22').val(), this);" disabled></button>
+			<input type="text" class="playername" data-pf="22" oninput="triggerEvent('checkplayername',{pf:22});" tabindex="8" id="sb-pn22" placeholder="" list="playernamelist" autocomplete="on" />
+			<button class="sb-char-select-btn" id="sb-pc22" onclick="openCharacterSelectPanel(2,2);"></button>
+			<input type="hidden" value="" id="sb-pid22" />
+			<input type="hidden" value="" id="sb-charid22" />
+			<input type="hidden" value="" id="sb-charcostumeid22" />
+		</div>
+		<div class="player-data">
+			<div class="playerscore">
+				<button class="playerscore" onclick="modifyScore(2,-1);">-</button>
+				<input type="text" class="playerscore" onblur="numbersOnly(this);" onfocus="this.select();" id="sb-ps2" value="0" /> 
+				<button class="playerscore" onclick="modifyScore(2,1);">+</button>
+			</div>
+			<div class="gfwinnerslosers">
+				<div>
+					<input type="checkbox" value="1" onchange="changePlayerState(2,'winners');" id="pstate2-winners" />
+					<label for="pstate2-winners">Winners</label>
+				</div>
+				<div>
+					<input type="checkbox" value="1" onchange="changePlayerState(2,'losers');" id="pstate2-losers" />
+					<label for="pstate2-losers">Losers</label>
+				</div>
+				<input type="hidden" id="sb-pstate2" value="0" />
+			</div>
+		</div>
+	</div>
+	<div id="sb-center">
+		<button tabindex="-1" class="swapside" onclick="sbSwapPlayers(1);"><img src="img/swap_left.png" alt="" /></button>
+		<button tabindex="-1" class="swapplayers" onclick="sbSwapPlayers(0);">Swap</button>
+		<button tabindex="-1" class="swapside" onclick="sbSwapPlayers(2);"><img src="img/swap_right.png" alt="" /></button>
+		<div class="buttons">
+			<button tabindex="-1" onclick="resetScore();">0-0</button>
+			<button tabindex="-1" onclick="clearBoard();">Clear board</button>
+
+		</div>
+	</div>
+	<div id="sb-info"></div>
+</div>
+
+<div id="sb-options">
+	<div id="sb-casino">
+		<button id="sb-casino-open" onclick="casinoOpenBets();">OPEN BETS</button>
+		<button id="sb-casino-expire" onclick="casinoExpire();">EXPIRE</button>
+		<button id="sb-casino-reopen" onclick="casinoReOpenSet();">REOPEN SET / UN-EXPIRE</button>
+		<button id="sb-casino-setwinner" onclick="casinoSetWinner();">SET WINNER</button>
+		<button id="sb-casino-cancelset" onclick="casinoCancelSet();">CANCEL</button>
+		<div id="sb-casino-label"></div>
+	</div>
+	<div id="sb-vod-buttons">
+		<button tabindex="-1" disabled class="green start" onclick="vodCreateSet();casinoOpenBets();">Create set</button>
+		<button tabindex="-1" disabled class="green end" onclick="vodCompleteSet();casinoSetWinner();">Complete set</button>
+		<button tabindex="-1" disabled class="red end" onclick="vodRejectSet();casinoCancelSet();">Reject set</button>
+	</div>
+</div>
+
+<div id="sb-player-seating-order" class="unselectable"></div>
+<div id="sb-casters"></div>
+<div id="sb-fields">
+	<div class="row">
+		<div class="label">Round</div>
+		<input type="text" id="sb-field-round" oninput="triggerEvent('autoupdate', {threshold:true});" class="input" value="" />
+	</div>
+	<div class="row">
+		<div class="label">Event</div>
+		<input type="text" id="sb-field-event" oninput="triggerEvent('autoupdate', {threshold:true});" class="input" value="" />
+	</div>
+	
+</div>
+<div id="sb-lt-fields"></div>
+
+<datalist id="playernamelist"></datalist>
+
+<div id="sb-character-select-panel" class="modal">
+	<div class="last-used"></div>
+	<div class="character-costumes"></div>
+	<div class="character-list"></div>
+</div>
+<div id="sb-multiname-selection-panel" class="modal">
+	<div class="wrap"></div>
+</div>

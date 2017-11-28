@@ -1,0 +1,587 @@
+@font-face {
+	font-family: 'Alegreya';
+	src: url('Alegreya-Regular.otf'); 
+}
+@font-face {
+	font-family: 'Myriad';
+	src: url('Myriad Pro Semibold.ttf'); 
+}
+
+#main {
+	font-family: 'Myriad';
+}
+
+#board {
+	position:absolute;
+	left:202px;
+	top:0px;
+	width:876px;
+	height:100px;
+	
+	opacity:0;
+	transform:scale(1.1);
+	-webkit-filter:blur(22px);
+	transition:all .6s 0s;
+}
+#main.visible #board {
+	opacity:1;
+	transform:scale(1);
+	-webkit-filter:blur(0px);
+	transition:all 0s 0s;
+}
+#main.doubles.game1 #board {
+	left:404px;
+}
+
+#score_bg1,
+#score_bg2 {
+	position:absolute;
+	top:0px;
+	width:74px;
+	height:47px;
+	opacity:0;
+	font-family:arial;
+	color:#fff;
+	font-size:22px;
+	font-weight:bold;
+	text-shadow:0px 0px 2px #000, 0px 0px 6px #946a0f;
+	
+	transition:all 0s .5s;
+}
+#score_bg1 {
+	left:30px;
+	background-image:url('scoreboard/score1.png');
+}
+#score_bg2 {
+	right:30px;
+	background-image:url('scoreboard/score2.png');
+}
+
+#score_bg1 .inner,
+#score_bg2 .inner {
+	-webkit-transition:all 200ms;
+}
+#score_bg1.hidden .inner,
+#score_bg2.hidden .inner {
+	-webkit-filter:blur(2px) brightness(2);
+}
+
+#main.visible #score_bg1,
+#main.visible #score_bg2 {
+	transition:all .8s 1.5s;
+	opacity:1;
+}
+#score_bg1 .inner,
+#score_bg2 .inner {
+	position:absolute;
+	left:10px;
+	right:10px;
+	top:0px;
+	line-height:47px;
+	text-align:center;
+	vertical-align:middle;
+}
+
+#board_left,
+#board_right {
+	position:absolute;
+	top:0px;
+	width:438px;
+	height:100px;
+	overflow:hidden;
+}
+#board_left {
+	left:0px;
+}
+#board_right {
+	right:0px;
+}
+
+
+#board_left_bg,
+#board_right_bg {
+	position:absolute;
+	height:47px;
+	width:444px;
+	z-index:20;
+	background-image:url('scoreboard/board.png');
+	transition:all 0s 1s ease-in;
+}
+#board_left_bg {
+	left:80px;
+	background-position:left;
+	transform:translate(550px);
+	
+}
+#board_right_bg {
+	right:80px;
+	background-position:right;
+	transform:translate(-550px);
+}
+
+
+#main.visible #board_left_bg,
+#main.visible #board_right_bg {
+	transition:all .7s 1s cubic-bezier(.17,.67,0,1);
+	transform:translateX(0px);
+}
+
+#board_left_bottom,
+#board_right_bottom {
+	position:absolute;
+	top:30px;
+	padding-top:10px;
+	padding-bottom:3px;
+	width:120px;
+	z-index:10;
+	font-size:12px;
+	font-weight:0;
+	height:20px;
+	font-family:segoe ui;
+	line-height:20px;
+	vertical-align:middle;
+	text-align:center;
+	background-image:url('scoreboard/bottom.png');
+	transition:all 100ms 300ms;
+}
+
+#board_left_bottom {
+	right:0px;
+	padding-left:20px;
+	padding-right:40px;
+	background-position:left;
+	transform:translateX(200px);
+}
+#board_right_bottom {
+	left:0px;
+	padding-right:20px;
+	padding-left:40px;
+	background-position:right;
+	transform:translateX(-200px);
+}
+#main.game3.visible #board_left_bottom,
+#main.game3.visible #board_right_bottom,
+#main.game7.visible #board_left_bottom,
+#main.game7.visible #board_right_bottom,
+#main.game9.visible #board_left_bottom,
+#main.game9.visible #board_right_bottom,
+#main.game1.doubles.visible #board_left_bottom,
+#main.game1.doubles.visible #board_right_bottom,
+#main.game5.doubles.visible #board_left_bottom,
+#main.game5.doubles.visible #board_right_bottom {
+	transform:translateX(0px);
+	transition:all 400ms 1200ms;
+}
+
+
+
+
+#pf1,
+#pf2 {
+	position:absolute;
+	top:10px;
+	width:236px;
+	height:27px;
+	line-height:27px;
+	font-size:18px;
+	font-weight:bold;
+	text-align:center;
+	overflow:hidden;
+	vertical-align:middle;
+	text-shadow:1px 1px 0px #000, 0px 0px 5px #000;
+}
+#pf1 {
+	left:60px;
+}
+#pf2 {
+	right:60px;
+}
+
+#pf1 span,
+#pf2 span {
+	display:inline-block;
+	transition:all 300ms;
+	transform:translateY(0px);
+}
+
+#pf1.hidden span,
+#pf2.hidden span {
+	transform:translateY(20px);
+	opacity:0;
+}
+#pf1.hiddentop span,
+#pf2.hiddentop span {
+	transform:translateY(-20px);
+	opacity:0;
+	transition:all 0ms;
+}
+
+#flag1,
+#flag2,
+#flag12,
+#flag22 {
+	position:absolute;
+	top:8px;
+	height:31px;
+	width:80px;
+	opacity:0.9;
+	background-size:contain;
+	background-repeat:no-repeat;
+	transition:all 400ms;
+}
+#flag1 {
+	left:10px;
+	background-position:left;
+}
+#flag2 {
+	right:10px;
+	background-position:right;
+}
+#flag12 {
+	left:270px;
+	opacity:0;
+	background-position:right;
+}
+#flag22 {
+	right:270px;
+	opacity:0;
+	background-position:left;
+}
+
+
+#main.doubles #flag12,
+#main.doubles #flag22 {
+	opacity:1;
+}
+
+
+#char1,
+#char2,
+#char12,
+#char22 {
+	position:absolute;
+	top:12px;
+	height:22px;
+	width:22px;
+	background-size:contain;
+	background-repeat:no-repeat;
+	background-position:50% 50%;
+}
+
+#char1 {
+	left:29px;
+}
+#char2 {
+	right:29px;
+}
+#char12 {
+	opacity:0;
+	left:302px;
+}
+#char22 {
+	opacity:0;
+	right:302px;
+}
+#main.doubles #char12,
+#main.doubles #char22 {
+	opacity:1;
+}
+
+#team1,
+#team12,
+#team2,
+#team22 {
+	position:absolute;
+	width:110px;
+	top:8px;
+	bottom:8px;
+	overflow:hidden;
+	mix-blend-mode:soft-light;
+}
+#team1 {
+	left:217px;
+	text-align:right;
+}
+#team2 {
+	right:217px;
+	text-align:left;
+}
+#team12 {
+	left:177px;
+	text-align:right;
+	opacity:0;
+}
+#team22 {
+	right:177px;
+	text-align:left;
+	opacity:0;
+}
+
+
+#main.doubles #team1 {
+	left:67px;
+	text-align:left;
+}
+#main.doubles #team2 {
+	right:67px;
+	text-align:right;
+}
+#main.doubles #team12,
+#main.doubles #team22 {
+	opacity:1;
+}
+
+
+#team1 .item,
+#team2 .item,
+#team12 .item,
+#team22 .item {
+	display:inline-block;
+	height:41px;
+	margin:-5px 0px;
+	width:40px;
+	background-position:50% 50%;
+	background-size:contain;
+	background-repeat:no-repeat;
+}
+
+#logo {
+	position:absolute;
+	left:407px;
+	top:1px;
+	
+	z-index:30;
+	width:62px;
+	height:52px;
+	background-image:url('scoreboard/logo.png');
+	background-repeat:no-repeat;
+	background-size:contain;
+	background-position:50% 50%;
+	
+	opacity:0;
+	transform:scale(0);
+	transition:all 0s .5s;
+}
+
+#main.game3 #logo,
+#main.game7 #logo,
+#main.game9 #logo,
+#main.game1.doubles #logo,
+#main.game5.doubles #logo {
+	height:62px;
+	width:72px;
+	left:402px;
+}
+
+#main.visible #logo {
+	opacity:1;
+	transform:scale(1);
+	transition:all .6s .4s cubic-bezier(0,.06,0,.99);
+}
+
+
+#melee_singles_container,
+#smash4_container,
+#melee_doubles_container {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	opacity:0;
+}
+
+
+
+
+.logorotation {
+	position:absolute;
+	overflow:hidden;
+}
+
+
+#main.singles.game1 .logorotation,
+#main.singles.game5 .logorotation {
+	left:13px;
+	width:172px;
+	bottom:25px;
+	height:90px;
+}
+#main.doubles.game1 .logorotation,
+#main.doubles.game5 .logorotation {
+	left:63px;
+	width:280px;
+	bottom:12px;
+	height:75px;
+}
+
+.logorotation .item {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	opacity:0;
+	background-position:50% 50%;
+	background-repeat:no-repeat;
+	background-size:contain;
+	opacity:0;
+	transform:scale(.7);
+	transition:all 300ms;
+}
+.logorotation .item.visible {
+	opacity:1;
+	transform:scale(1);
+}
+
+/*
+1 = melee
+3 = smash4
+5 = Smash N64
+9 = RoA
+7 = SFV
+*/
+
+#main.singles.game1 #melee_singles_container,
+#main.singles.game5 #melee_singles_container {
+	opacity:1;
+}
+#main.doubles.game1 #melee_doubles_container,
+#main.doubles.game5 #melee_doubles_container {
+	opacity:1;
+}
+#main.game9 #smash4_container,
+#main.game7 #smash4_container,
+#main.game3 #smash4_container {
+	opacity:1;
+}
+
+
+#melee_singles_container .topright {
+	position:absolute;
+	right:0px;
+	top:0px;
+	width:198px;
+	height:65px;
+	vertical-align:middle;
+	text-align:center;
+	font-weight:bold;
+	
+	white-space:nowrap;
+	font-family: 'cambria-bold';
+	-webkit-filter:brightness(1.2);
+}
+
+#melee_singles_container .topright .event_display {
+	position:absolute;
+	left:5px;
+	right:5px;
+	top:0px;
+	line-height:34px;
+}
+#melee_singles_container .topright .round_display {
+	position:absolute;
+	left:5px;
+	right:5px;
+	bottom:0px;
+	line-height:40px;
+	font-size:30px;
+}
+
+
+#melee_singles_container .event_display span {
+	position:relative;
+	font-size:16px;
+	background-image:url('gradient.png');
+	background-size:contain;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	-webkit-filter:drop-shadow(0px 0px 1px #fac63e);
+}
+#melee_singles_container .round_display span {
+	position:relative;
+	font-size:24px;
+	background-image:url('gradient.png');
+	background-size:contain;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	-webkit-filter:drop-shadow(0px 0px 1px #fac63e);
+}
+
+
+
+
+
+
+
+
+#melee_singles_container .bottomright {
+	position:absolute;
+	right:0px;
+	bottom:0px;
+	width:198px;
+	height:140px;
+}
+
+#melee_singles_container .bottomright .commentary_display {
+	position:absolute;
+	left:15px;
+	right:15px;
+	bottom:11px;
+}
+#melee_singles_container .bottomright .commentary_display:before {
+	content:' - Commentators - ';
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:-14px;
+	color:#fff;
+	font-size:10px;
+	text-align:center;
+	text-transform:uppercase;
+	letter-spacing:2px;
+	font-family:segoe ui;
+	font-weight:bold;
+	
+	background-image:url('gradient.png');
+	background-size:contain;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+
+
+.commentary_display .item {
+	position:relative;
+	height:24px;
+	background:rgba(0,0,0,0.2);
+	margin:5px 5px 0px;
+	color:#eee;
+	
+}
+.commentary_display .item .nickname {
+	position:absolute;
+	left:35px;
+	right:15px;
+	font-size:14px;
+	font-weight:bold;
+	top:4px;
+	font-family:arial;
+	
+	
+	background-image:url('gradient.png');
+	background-size:contain;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.commentary_display .item .flag {
+	position:absolute;
+	left:5px;
+	top:0px;
+	width:20px;
+	height:24px;
+	background-size:contain;
+	background-position:50% 50%;
+	background-repeat:no-repeat;
+}

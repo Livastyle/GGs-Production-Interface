@@ -1,0 +1,11 @@
+body {
+	margin:0;
+	padding:0;
+	background:transparent;
+	overflow:hidden;
+	position:relative;
+	color:#fff;
+	font-size:14px;
+	font-family:arial;
+	white-space:nowrap;
+}

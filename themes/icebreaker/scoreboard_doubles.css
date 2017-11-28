@@ -1,0 +1,190 @@
+@font-face { 
+	font-family: segoeuib;
+	src: url('./segoeuib.ttf'); 
+}
+
+
+#main {
+	position:fixed;
+	left:0px;
+	top:0px;
+	width:1280px;
+	height:720px;
+	
+	white-space:nowrap;
+	overflow:hidden;
+	color:#000;
+	font-family: segoeuib;
+	text-align:center;
+	font-size:16px;
+}
+
+.playerside {
+	position:absolute;
+	left:0px;
+	width:400px;
+	height:88px;
+	overflow:hidden;
+}
+#t1 {
+	top:277px;
+}
+#t2 {
+	top:591px;
+}
+
+#p1,
+#p2,
+#p12,
+#p22 {
+	position:absolute;
+	left:0px;
+	right:0px;
+	height:39px;
+}
+#p1,
+#p2 {
+	top:5px;
+}
+#p12,
+#p22 {
+	bottom:5px;
+	background:rgba(0,0,0,0.1);
+}
+
+
+.nicknamebg {
+	position:absolute;
+	left:54px;
+	right:0px;
+	top:6px;
+	height:28px;
+}
+.nicknamebg .item {
+	width:32px;
+	height:28px;
+	opacity:1;
+	background-size:contain;
+	background-repeat:no-repeat;
+	background-position:50% 50%;
+}
+
+
+.nickname {
+	position:absolute;
+	top:0px;
+	left:95px;
+	right:35px;
+	height:38px;
+	line-height:38px;
+	vertical-align:middle;
+	font-size:22px;
+	text-shadow:0px 0px 1px #000,2px 2px 0px #000,-2px 2px 0px #000,2px -2px 0px #000,-2px -2px 0px #000;
+	color:#fff;
+	transition:all .3s;
+}
+
+.nickname.hidden {
+	opacity:0;
+}
+
+
+
+.char {
+	display:block;
+	position:absolute;
+	top:0px;
+	bottom:0px;
+	right:10px;
+	width:20px;
+	background-size:contain;
+	background-repeat:no-repeat;
+	background-position-y:50%;
+	-webkit-filter:drop-shadow(2px 0px 0px #100);
+}
+
+#char1.ditto,
+#char2.ditto {
+	-webkit-filter:drop-shadow(0px 0px 1px #000) brightness(0.9);
+}
+#char12.ditto,
+#char22.ditto {
+	-webkit-filter:drop-shadow(0px 0px 1px #fff) brightness(1.3);
+}
+
+.flag {
+	position:absolute;
+	top:8px;
+	left:10px;
+	width:33px;
+	height:20px;
+	background-size:cover;
+	background-position:50% 50%;
+	background-repeat:no-repeat;
+	border:1px solid #000;
+}
+
+
+
+
+.state {
+	position:absolute;
+	bottom:6px;
+	font-size:12px;
+	text-transform:uppercase;
+	font-family:arial;
+	font-weight:bold;
+	color:#fff;
+	opacity:1;
+	letter-spacing:1px;
+	text-shadow:0px 0px 4px #000,0px 0px 6px #000,0px 0px 5px #000,0px 0px 6px #000;
+}
+#state1 {
+	left:6px;
+}
+#state2 {
+	right:6px;
+}
+
+.state .winners,
+.state .losers {
+	display:none;
+}
+
+.state.winners .winners,
+.state.losers .losers {
+	display:block;
+}
+
+
+.scorenum {
+	position:absolute;
+	left:400px;
+	width:50px;
+	opacity:1;
+	font-size:45px;
+	color:#fff;
+	text-align:center;
+	text-shadow:0px 0px 1px #000,2px 2px 0px #000,-2px 2px 0px #000,2px -2px 0px #000,-2px -2px 0px #000;
+}
+#score1 {
+	top:286px;
+}
+
+#score2 {
+	top:601px;
+}
+
+
+#roundinfo {
+	position:absolute;
+	left:10px;
+	width:430px;
+	top:7px;
+	text-align:center;
+	text-transform:uppercase;
+	color:#fff;
+	font-size:16px;
+	text-shadow:0px 0px 1px #000,2px 2px 0px #000,-2px 2px 0px #000,2px -2px 0px #000,-2px -2px 0px #000;
+}
+

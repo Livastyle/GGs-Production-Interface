@@ -1,0 +1,536 @@
+<div id="vod-settings">
+	<input type="text" value="" id="vod-settings-prefix" />
+</div>
+
+<div id="vod-unlinked-file-list"></div>
+<div id="vod-list"></div>
+
+<div id="vod-watcher-newfile" class="modal">
+	<div>New file!</div>
+	<div>
+		<select id="vod-watcher-newfile-selectset"></select>
+	</div>
+</div>
+
+<input type="text" id="vod-clipboard-input" style="visibility:visible;" value="0" />
+
+<script type="text/javascript">
+var vodListItem;
+var vodList = [];
+var vodFileList = [];
+
+
+// vodfilewatcher
+
+
+$("#content-youtube").on('opened', vodRefreshVodList);
+
+$(window).on('refreshplayerdatabase', function(e){
+	if(e.state==2)
+		vodRefreshVodList();
+});
+$(window).on('vodlistchanged', vodRefreshVodList);
+
+$(window).on('ws-vodfilewatcher', function(e){
+	if(e.msg.type == "filelist"){
+		var unlinkedCount = 0;
+		var newVodFileList = [];
+		for(index in e.msg.list){
+			var file = e.msg.list[index];
+			if(file.recording){
+				var currentItem = vodGetCurrentItem();
+				if(currentItem && !currentItem.done && currentItem.file.length == 0)
+					vodLinkVodFile(currentItem.id, file.filename);
+			}
+			file.linked = vodfileIsLinkedToVod(file);
+			newVodFileList.push(file);
+			if(!file.linked){
+				unlinkedCount++;
+			}
+		}
+		
+		
+		vodFileList = newVodFileList;
+		
+		triggerEvent("vodfilelistchanged", {count:unlinkedCount});
+		
+	}	
+	if(e.msg.type == "uploadprogress"){
+		var percent = e.msg.value.progress;
+		var vodid = e.msg.vodid;
+		$("#vodlist-item-"+vodid+" .progress").css("width", percent+"%");
+	}
+	if(e.msg.type == "uploadstatus"){
+		if(e.msg.value == 'success'){
+			$("#vodlist-item-"+vodid+" .progress").css("width", "0%");
+		}
+	}
+	if(e.msg.type == "uploaded"){
+		vodSaveItem(e.msg.vod);
+	}
+
+	
+});
+
+
+
+$(window).on("vodfilelistchanged", function(e){
+	if(e.count > 0){
+		$("#nav-menu-youtube-notifiy").text(e.count).addClass("active");
+	}else{
+		$("#nav-menu-youtube-notifiy").text(e.count).removeClass("active");
+	}
+});
+
+$(window).on('update', function(){
+
+	var sb = profile.scoreboarddata;
+	
+	// only do update if 2 players are assigned
+	if(sb.player[1].id == 0 || sb.player[2].id == 0)
+		return;
+	
+
+	// save fail, if this item should be empty for wahtever reason
+	if(!vodListItem)
+		return;
+	
+	vodListItem.game = parseInt(sb.game);
+	vodListItem.round = sb.round;
+	vodListItem.event = sb.event;
+	
+	vodListItem.p1 = []; // reset value for re-write
+	vodListItem.p2 = []; // reset value for re-write
+	
+	vodListItem.p1.push(sb.player[1].id);
+	vodListItem.p2.push(sb.player[2].id);
+	if(sb.playstyle == "doubles"){
+		vodListItem.p1.push(sb.player[12].id);
+		vodListItem.p2.push(sb.player[22].id);
+	}
+	vodItemAddCharacter(sb.player[1]);
+	vodItemAddCharacter(sb.player[2]);
+	if(sb.playstyle == "doubles"){
+		vodItemAddCharacter(sb.player[12]);
+		vodItemAddCharacter(sb.player[22]);
+	}
+	
+	for(index in sb.caster){
+		var co = sb.caster[index];
+		if(co.id != 0){
+			if(vodListItem.casters.indexOf(co.id) == -1){
+				vodListItem.casters.push(co.id);
+			}
+		}
+	}
+	
+	if(vodListItem.casters == null){
+		alert("vodListItem.casters == null");
+	}
+
+	// remove empty tag, indicating that actual changes were made
+	if(vodListItem.empty)
+		delete vodListItem.empty;
+	vodSaveItem(vodListItem);
+});
+
+
+function vodRefreshVodFileList(){
+	
+
+	vodFileList.sort(function (a, b) {
+		if (a.time > b.time) 
+			return -1;
+		if (a.time < b.time)
+			return 1;
+		return 0;
+	});
+	
+	
+	var nowTime = new Date().getTime();
+	var frag = document.createDocumentFragment();
+	for(index in vodFileList){
+		var file = vodFileList[index];
+
+
+		var $item = $('<div class="item" />');
+		var ageDate = new Date(file.time);
+		var age = (nowTime - ageDate.getTime()) / 1000;
+		if(file.recording){
+			$item.addClass("recording");
+		}
+		if(file.linked){
+			$item.addClass("linked");
+		}
+		
+		$item.append('<div class="indicator"></div>');
+		$item.append('<div class="filename">'+file.filename+'</div>');
+		$item.append('<div class="filesize">'+convertBytesToString(file.size)+'</div>');
+		$item.append('<div class="time">'+convertSecToTimeString(age)+'</div>');
+
+		$item.append('<div class="options">'+
+		'<button onclick="vodLinkFileWithVod(\''+file.filename+'\',\'current\');">C</button>'+
+		'<button onclick="vodLinkFileWithVod(\''+file.filename+'\',\'select\');">S</button>'+
+		'<button onclick="vodDeleteVideoFile(\''+file.filename+'\');">X</button>'+
+		'</div>');
+		
+		if(file.linked){
+			var vod = vodGetItemByFile(file.filename);
+			var $vodfileitem = $("#vodlist-item-"+vod.id+" .info .file");
+			$vodfileitem.attr("class", $item.attr("class")).removeClass("item").addClass("file");
+			$vodfileitem.html($item.html());
+		}else{
+			$item.appendTo(frag);
+		}
+	}
+	$("#vod-unlinked-file-list").html(frag);
+	
+}
+$(window).on("vodfilelistchanged", vodRefreshVodFileList);
+
+function vodRefreshVodList(){
+	loadAjax("vodlist", function(data){
+		vodList = data.list;
+		
+		vodListItem = vodGetCurrentItem();
+
+		vodList.sort(function(a, b) {
+			a.id = parseInt(a.id);
+			b.id = parseInt(b.id);
+			if (a.id > b.id) 
+				return -1;
+			if (a.id < b.id) 
+				return 1;
+			return 0;
+		});
+		
+		for(index in vodList){
+		// TODO: check if this works how it should
+			vodList[index].chars = Object.assign(vodList[index].c1, vodList[index].c2);
+		}
+		
+		var times = [];
+
+		
+		if(getParameter("p") == "youtube"){
+
+			
+			var vodListCont = document.getElementById("vod-list");
+			while(vodListCont.firstChild)
+				vodListCont.removeChild(vodListCont.firstChild);
+			
+			var vodListFrag = document.createDocumentFragment();
+			
+			for(index in vodList){
+				var start = new Date();
+				var vod = vodList[index];
+				
+				// thumbnail
+				var $tnhtml = $('<div class="tn" />');
+				if(vod.tnlist && vod.tnlist.length > 0){
+					$tnhtml.css({"background-image":"url('./../"+vod.tnlist[0].tn_filename+"')"});
+				}
+				
+				// players
+				var $pnhtml = $('<div class="players" />');
+				
+				var $p1html = $('<div class="p1" />');
+				for(p1i in vod.p1){
+					var po = getPlayerById(vod.p1[p1i]);
+					$p1html.append('<div class="name">'+po.nickname+'</div><div class="sep">/</div>');
+				}		
+				var $p2html = $('<div class="p2" />');
+				for(p2i in vod.p1){
+					var po = getPlayerById(vod.p2[p2i]);
+					$p2html.append('<div class="name">'+po.nickname+'</div><div class="sep">/</div>');
+				}
+				
+				// round display
+				var $roundhtml = $('<div class="round" />');
+				$roundhtml.text(vod.round+" - "+vod.event);		
+				// round display
+				var $castershtml = $('<div class="casters" />');
+				for(ci in vod.casters){
+					var co = getPlayerById(vod.casters[ci]);
+					$castershtml.append('<div class="name">'+co.nickname+'</div><div class="sep">/</div>');
+				}
+				
+				// upload section
+				
+				var $uploadhtml = $('<div class="upload" />');
+				if(isVodUploadReady(vod)){
+					$uploadhtml.append('<button onclick="vodStartUpload('+vod.id+');">UPLOAD</button>');
+				}
+				if(vod.yt.length > 1){
+					$uploadhtml.append('<button onclick="window.open(\'https://www.youtube.com/watch?v='+vod.yt+'\');">OPEN YOUTUBE</button>');
+				}
+				
+				// progress background
+				var $progresshtml = $('<div class="progress" />');
+				
+				// file and youtube info
+				var $infohtml = $('<div class="info" />');
+				
+				// init file item
+				var $item = $('<div class="item" onclick="vodClipboardCopyTitle(\''+vodBuildTitle(vod)+'\')" id="vodlist-item-'+vod.id+'" />');
+				
+				
+				if(!vod.done){
+					$item.addClass("current");
+				}			
+				if(vod.yt.length > 2){
+					$item.addClass("uploaded");
+					var $ythtml = $('<div class="yt" />');
+					$ythtml.html('<button onclick="window.open(\'https://www.youtube.com/watch?v='+vod.yt+'\');">Watch</button>');
+					$ythtml.appendTo($infohtml);
+				}			
+				if(vod.file.length > 2){
+					$item.addClass("linked");
+					var $filehtml = $('<div class="file" />');
+					$filehtml.appendTo($infohtml);
+				}
+				
+				$progresshtml.appendTo($item);
+				$infohtml.appendTo($item);
+				
+				$tnhtml.appendTo($item);
+				
+				$p1html.appendTo($pnhtml);
+				$('<div class="versus" >Vs.</div>').appendTo($pnhtml);
+				$p2html.appendTo($pnhtml);
+				
+				$pnhtml.appendTo($item);
+				
+				$roundhtml.appendTo($item);
+				$castershtml.appendTo($item);
+				
+				$uploadhtml.appendTo($item);
+
+				
+				
+				$item.appendTo(vodListCont);
+				var end = new Date();
+				times.push(end-start);
+			}
+		}
+		
+		//vodListCont.appendChild(vodListFrag);
+		
+		console.log(times);
+		
+		if(vodListItem && vodListItem.id > 0 && !vodListItem.done){
+			$("#sb-vod-buttons button.start").prop("disabled", true);
+			$("#sb-vod-buttons button.end").prop("disabled", false);
+		}else{
+			$("#sb-vod-buttons button.start").prop("disabled", false);
+			$("#sb-vod-buttons button.end").prop("disabled", true);
+		}
+		
+		// refresh file list
+		sendDataToWebsocket({type:"refreshlist"},"vodfilewatcher");
+	});
+	
+}
+
+function vodClipboardCopyTitle(title){
+
+	document.getElementById('vod-clipboard-input').value = title;
+	document.getElementById('vod-clipboard-input').select();
+
+	document.execCommand('copy');
+}
+
+function vodLinkFileWithVod(filename, type){
+	if(type == 'current' && vodListItem){
+		vodLinkVodFile(vodListItem.id, filename);
+	}
+	if(type == 'select' && vodList.length > 0){
+		// TODO: implement
+	}
+}
+
+function vodDeleteVideoFile(filename){
+	var res = confirm("Do you really want to delete that video file??");
+	if(res){
+		sendDataToWebsocket({type:"deletefile",filename:filename},"vodfilewatcher");
+	}
+}
+
+function vodStartUpload(vodid){
+	var item = vodGetItemById(vodid);
+	console.log(item);
+	var title = vodBuildTitle(item);
+	var desc = vodBuildDesc(item);
+	
+	//alert(desc);
+	
+	sendDataToWebsocket({type:"upload",vod:item},"vodfilewatcher");
+}
+
+function vodBuildTitle(vod){
+	var tpl = "{PREFIX} - {P1} Vs. {P2} - {ROUND} - {EVENT}";
+
+
+	// debugs TODO: fix
+	var prefix = $("#vod-settings-prefix").val().trim();
+	var round = vod.round;
+	var event = vod.event;
+	
+	var p1 = vodBuildTitlePlayer(1, vod);
+	var p2 = vodBuildTitlePlayer(2, vod);
+	
+	
+	tpl = tpl.replace('{PREFIX}', prefix);
+	tpl = tpl.replace('{P1}', p1);
+	tpl = tpl.replace('{P2}', p2);
+	tpl = tpl.replace('{ROUND}', round);
+	tpl = tpl.replace('{EVENT}', event);
+	
+	return tpl;
+}
+
+function vodBuildTitlePlayer(pn, vod){
+	var tpl = "{NAME} ({CHARACTERS})";
+	var playerSep = " + ";
+	var characterSep = ", ";
+	var is1v1 = (vod["p"+pn].length == 1);
+	var parr = [];
+	for(index in vod["p"+pn]){
+		var po = getPlayerById(vod["p"+pn][index]);
+		parr.push(is1v1 ? po.generateddisplayname : po.nickname);
+	}
+	if(is1v1){
+		var pstr = tpl.replace('{NAME}', parr.join(playerSep));
+		for(playerId in vod.chars){
+			var charsItem = vod.chars[playerId];
+			var charNameArray = [];
+			for(ci in charsItem)
+				charNameArray.push(getCharacterById(charsItem[ci]).short);
+			if(playerId == vod["p"+pn][0])
+				pstr = pstr.replace('{CHARACTERS}', charNameArray.join(characterSep));
+		}
+		return pstr;
+	}else{
+		return parr.join(playerSep);
+	}
+}
+
+function vodBuildDesc(vod){
+	// TODO: implement properly
+	var text = "Awakening 2\n"+
+	"Munich, Germany\n"+
+	"May 20-21 2017\n"+
+	"\n"+
+	"https://smash.gg/awakening2\n"+
+	"\n"+
+	"\n\nFollow and subscribe us:\nwww.Geekygoonsquad.com\nwww.twitch.tv/geekygoonsquad\nwww.twitter.com/geekygoonsquad\nwww.facebook.com/geekygoonsquad\n\nVisit and follow for more European action:\nwww.smasheurope.com\nwww.twitter.com/smasheurope\nwww.twitch.tv/smasheurope\n\n\nYou are NOT permitted to use this footage for compilations and other videos. You are NOT permitted to re-upload any content of Geeky Goon Squad!\n\nIf you want to use any content of GeekyGoonSquad, please get in contact using our contact formular.";
+
+	return text;
+}
+
+function vodLinkVodFile(vodid, filename){
+	var item = vodGetItemById(vodid);
+	item.file = filename;
+	vodSaveItem(item);
+}
+
+function vodItemAddCharacter(po){
+	if(!vodListItem.chars[po.id])
+		vodListItem.chars[po.id] = [];
+	var charList = vodListItem.chars[po.id];
+	if(charList.indexOf(po.character.cid) == -1 && po.id != 0 && po.character.cid != 0)
+		vodListItem.chars[po.id].push(po.character.cid);
+}
+
+
+function vodInitItem(){
+	return {
+		id:0,
+		yt:"",
+		smashgg_setid:0,
+		game:0,
+		p1:[],
+		p2:[],
+		chars:{},
+		casters:[],
+		round:"",
+		event:"",
+		empty:true,
+		done:false
+	};
+}
+
+function vodCreateSet(){
+	if(vodListItem)
+		return
+	vodListItem = vodInitItem();
+	vodSaveItem(vodListItem);
+}
+function vodCompleteSet(){
+	if(!vodListItem)
+		return
+	vodListItem.done = true;
+	vodSaveItem(vodListItem);
+}
+
+function vodRejectSet(){
+	if(!vodListItem)
+		return;
+	vodDeleteSet(vodListItem.id);
+}
+
+function vodSaveItem(item){	
+	loadAjax("savevod", {vod:item}, function(data){
+		vodListItem.id = data.vod.id;
+		triggerGlobalEvent("vodlistchanged");
+	});
+}
+function vodDeleteSet(deleteID){
+	loadAjax("deletevod", {id:deleteID}, function(data){
+		triggerGlobalEvent("vodlistchanged");
+	});
+}
+
+function isVodUploadReady(vod){
+	return (!vodIsFileRecording(vod.file) && vod.file.length > 1 && vod.done && vod.yt.length == 0);
+}
+
+function vodIsFileRecording(filename){
+	var file = vodGetFileByFilename(filename);
+	if(file && typeof(file.recording) != 'undefined')
+		return file.recording;
+	return false;
+}
+
+function vodGetFileByFilename(filename){
+	for(index in vodFileList)
+		if(vodFileList[index].filename == filename)
+			return vodFileList[index];
+	return null;
+}
+
+function vodGetItemById(id){
+	for(index in vodList)
+		if(vodList[index].id == id)
+			return vodList[index];
+	return null;
+}
+function vodGetItemByFile(filename){
+	for(index in vodList)
+		if(vodList[index].file == filename)
+			return vodList[index];
+	return null;
+}
+function vodGetCurrentItem(){
+	for(index in vodList)
+		if(!vodList[index].done)
+			return vodList[index];
+	return null;
+}
+function vodfileIsLinkedToVod(file){
+	for(index in vodList)
+		if(vodList[index].file == file.filename)
+			return true;
+	return false;
+}
+</script>

@@ -1,0 +1,456 @@
+
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script type="text/javascript" src="./../cp/js/jquery-3.1.1.min.js"></script>
+		<script type="text/javascript">
+		window.onload = init;
+		var ws;
+		var globalXml;
+		var vmixIP = "10.10.11.3:8088";
+		var playerScreen = getParameter("p");
+		
+		var playerstr1 = "";
+		var playerstr2 = "";
+		
+		
+		
+		function init(){
+			$("#score").addClass("visible");
+			startWS('ws://'+location.host+':5000', process);
+			getVmixData();
+			startCWS('ws://ggs-casino.com:8083', casinoprocess);
+			if(playerScreen == "r"){
+				$("#main").addClass("flip");
+			}
+		}
+		function startWS(websocketServerLocation, callback){
+			if(ws == undefined || ws.readyState == undefined || ws.readyState === ws.CLOSED){
+				ws = new WebSocket(websocketServerLocation);
+				ws.onmessage = function(evt) { 
+					var wsdata = JSON.parse(evt.data);
+					if(wsdata.type == 'scoreboardinfo')
+						callback(wsdata.data);
+				};
+				ws.onclose = function(){
+					setTimeout(function(){startWS(websocketServerLocation)}, 5000);
+				};
+			}
+		}
+		
+		function process(data){
+			console.log(data);
+			var doubles = data.playstyle == "doubles";
+			
+			if(doubles){
+				$("#main").addClass("doubles");
+			}else{
+				$("#main").removeClass("doubles");
+			}
+			
+			var pnum = 0;
+			
+			// playerScreen
+			// data.seatorder
+			if(data.seatorder[0] == "1" || data.seatorder[0] == "12"){
+				pnum = (playerScreen == "l" ? 1 : 2);
+			}else{
+				pnum = (playerScreen == "r" ? 1 : 2);
+			}
+
+			
+			$("#score").text(data.score[pnum]);
+			
+			$("#charbg1").css("background-image","url('./../assets/characters/thumbnail/"+data.game+"/default/"+data.player[pnum].character.cid+".png')").attr("data-charid", data.player[pnum].character.cid);
+			if(doubles){
+				playerstr1 = data.player[pnum].nickname + " + " + data.player[pnum+"2"].nickname;
+				playerstr2 = data.player[pnum+"2"].nickname + " + " + data.player[pnum].nickname;
+
+				$("#charbg2").css("background-image","url('./../assets/characters/thumbnail/"+data.game+"/default/"+data.player[pnum+"2"].character.cid+".png')").attr("data-charid", data.player[pnum+"2"].character.cid);
+			}else{
+				playerstr1 = data.player[pnum].generateddisplayname;
+				playerstr2 = data.player[pnum].generateddisplayname;
+			}
+			
+		}
+		
+		function casinoprocess(data){
+			if(data.type != "set")
+				return;
+			var betsOpen = false;
+			if(data.value){
+				
+				betsOpen = data.value.open;
+				var coins = 0;
+				
+				var cpnum = 0;
+				
+				console.log(playerstr1);
+				console.log(data.value.p1);
+				
+				if(playerstr1 == data.value.p1 || data.value.p1 == playerstr2){
+					cpnum = 1;
+				}				
+				if(playerstr1 == data.value.p2 || data.value.p2 == playerstr2){
+					cpnum = 2;
+				}
+				
+				console.log(cpnum);
+
+				if(cpnum == 0){
+					betsOpen = false;
+				}else{
+				
+					if(data.value.bets){
+						for(index in data.value.bets){
+							var betObj = data.value.bets[index];
+							if(cpnum == betObj.player)
+								coins += parseInt(betObj.coins);
+						}
+					}
+					console.log(coins);
+					$("#casino_coins").text(coins);
+				}
+				
+			}
+			
+			if(betsOpen){
+				$("#casino_coins").addClass("visible");
+				$("#score").removeClass("visible");
+			}else{
+				$("#score").addClass("visible");
+				$("#casino_coins").removeClass("visible");
+			}
+		}
+		
+
+
+		function getVmixData(){
+		
+			$.get( "http://"+vmixIP+"/api", function(xml) {
+				globalXml = xml;
+				var activeInput = $(xml).find("vmix>active").text();
+				var inputName = $(globalXml).find("vmix>inputs>input[number='"+activeInput+"']").text();
+				
+				var init = inputName.indexOf('[');
+				var fin = inputName.indexOf(']');
+
+				var showPanel = inputName.substr(init+1,fin-init-1);
+				if(showPanel.length == 0){
+					showPanel = "standby";
+				}
+				
+				if(!$("#"+showPanel).hasClass("visible")){
+					$(".panel").removeClass("visible");
+					$("#"+showPanel).addClass("visible");
+				}
+				
+				if(showPanel == "standby"){
+					$("#top,#bottom").addClass("hidden");
+				}else{
+					$("#top,#bottom").removeClass("hidden");
+				}
+				
+				
+			}).always(function() {
+				setTimeout(getVmixData, 1000);
+			});
+
+		}
+		
+		function secToMinSecStr(sec){
+			var min = Math.floor(sec / 60);
+			var sec = sec % 60;
+			min = (min < 10 ? '0'+min : min).toString();
+			sec = (sec < 10 ? '0'+sec : sec).toString();
+			return min+":"+sec;
+		}
+		
+		function getParameter(name) {
+			var params = location.search.substr(1).split("&");
+			for(k in params){
+				var tmp = params[k].split("=");
+				if(tmp[0] === name)
+					return decodeURIComponent(tmp[1]);
+			}
+			return null;
+		}
+		
+		
+		function startCWS(websocketServerLocation, callback){
+			ws = new WebSocket(websocketServerLocation);
+			ws.onmessage = function(evt) { 
+				var wsdata = JSON.parse(evt.data);
+				callback(wsdata);
+			};
+			ws.onclose = function(){
+				//try to reconnect in 5 seconds
+				setTimeout(function(){startCWS(websocketServerLocation)}, 5000);
+			};
+		}
+		
+		</script>
+		<style type="text/css">
+@font-face { 
+	font-family: segoeuib;
+	src: url('./segoeuib.ttf'); 
+}
+
+		
+		body {
+
+			color:#fff;
+			font-family: segoeuib;
+		}
+		
+		#main {
+			position:fixed;
+			left:0px;
+			right:0px;
+			top:70px;
+			bottom:50px;
+			
+			z-index:10;
+			background: rgb(94,150,215);
+			background: -moz-linear-gradient(top, rgba(94,150,215,1) 0%, rgba(48,74,109,1) 100%);
+			background: -webkit-linear-gradient(top, rgba(94,150,215,1) 0%,rgba(48,74,109,1) 100%);
+			background: linear-gradient(to bottom, rgba(94,150,215,1) 0%,rgba(48,74,109,1) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96d7', endColorstr='#304a6d',GradientType=0 );
+			
+		}
+		
+		.panel {
+			position:absolute;
+			left:0px;
+			right:0px;
+			top:0px;
+			bottom:0px;
+			opacity:0;
+		}
+		
+		.panel.visible {
+			opacity:1;
+		}
+		
+		#player {
+	
+		}
+		
+		
+		.playername {
+			display:none;
+			position:absolute;
+			left:20px;
+			right:20px;
+			font-size:180px;
+			line-height:200px;
+			text-align:center;
+			vertical-align:middle;
+			-webkit-text-stroke:8px #000;
+			text-shadow:0px 0px 10px #000,0px 0px 10px #000,0px 0px 10px #000,0px 0px 10px #000;
+			white-space:nowrap;
+			transform-origin:0% 50%;
+		}
+		#playername1 {
+			top:80px;
+		}
+		
+		#playername2 {
+			top:300px;
+			opacity:0;
+		}
+		.doubles #playername2 {
+			opacity:1;
+		}
+		
+		
+		#score {
+			position:absolute;
+			left:0px;
+			right:0px;
+			top:570px;
+			text-align:center;
+			font-size:600px;
+			line-height:600px;
+			vertical-align:middle;
+			-webkit-text-stroke:15px #000;
+			opacity:0;
+		}
+		#score.visible {
+			opacity:1;
+		}
+		
+		#casino_coins {
+			position:absolute;
+			left:0px;
+			right:0px;
+			top:770px;
+			text-align:center;
+			font-size:180px;
+			line-height:240px;
+			padding-bottom:20px;
+			background:rgba(0,0,0,0.5);
+			vertical-align:middle;
+			-webkit-text-stroke:5px #000;
+			color:#fd1;
+			text-shadow:0px 0px 30px #ff0;
+			opacity:0;
+		}
+		#casino_coins.visible {
+			opacity:1;
+		}
+
+		.charbg {
+			position:absolute;
+			left:0%;
+			right:0%;
+			bottom:0%;
+			top:0%;
+			background-size:cover;
+			background-position:50%;
+			background-repeat:no-repeat;
+			opacity:0;
+		}
+		
+
+		.charbg[data-charid="2"] { background-position-x:25%; } /* falco */
+		.charbg[data-charid="3"] { background-position-x:70%; } /* peach */
+		.charbg[data-charid="4"] { background-position-x:60%; } /* cf */
+		.charbg[data-charid="5"] { background-position-x:80%; } /* cf */
+		.charbg[data-charid="6"] { background-position-x:40%; } /* dk */
+		.charbg[data-charid="7"] { background-position-x:36%; } /* doc */
+		.charbg[data-charid="8"] { background-position-x:66%; } /* gaw */
+		.charbg[data-charid="9"] { background-position-x:39%; } /* ganon */
+		.charbg[data-charid="10"] { background-position-x:65%; } /* ic */
+		.charbg[data-charid="11"] { background-position-x:65%; } /* puff */
+		.charbg[data-charid="12"] { background-position-x:75%; } /* kirby */
+		.charbg[data-charid="13"] { background-position-x:35%;background-size:auto 150%;background-position-y:85% !important; } /* link */
+		.charbg[data-charid="14"] { background-position-x:45%; } /* luigi */
+		.charbg[data-charid="15"] { background-position-x:75%; } /* mario */
+		.charbg[data-charid="16"] { background-position-x:65%; } /* marth */
+		.charbg[data-charid="17"] { background-position-x:55%; } /* mewtwo */
+		.charbg[data-charid="18"] { background-position-x:55%; } /* ness */
+		.charbg[data-charid="19"] { background-position-x:85%; } /* ness */
+		.charbg[data-charid="20"] { background-position-x:70%; } /* pika */
+		.charbg[data-charid="21"] { background-position-x:40%; } /* roy */
+		.charbg[data-charid="22"] { background-position-x:35%; } /* samus */
+		.charbg[data-charid="23"] { background-position-x:75%; } /* sheik */
+		.charbg[data-charid="24"] { background-position-x:30%; } /* ylink */
+		.charbg[data-charid="25"] { background-position-x:65%; } /* yoshi */
+		.charbg[data-charid="26"] { background-position-x:65%; } /* zelda */
+
+		
+		#charbg1 {
+			opacity:1;
+		}
+		#main.doubles #charbg1 {
+			left:0%;
+			right:50%;
+			border-right:5px solid #000;
+		}
+		#main.doubles #charbg2 {
+			opacity:1;
+			left:50%;
+			right:0%;
+			border-left:5px solid #000;
+		}
+
+		#main.flip #charbg1,
+		#main.flip #charbg2 {
+			-webkit-transform:scaleX(-1);
+		}
+		#main.flip.doubles #charbg1 {
+			border-left:5px solid #000;
+			border-right:0px solid #000;
+		}
+		#main.flip.doubles #charbg2 {
+			border-right:5px solid #000;
+			border-left:0px solid #000;
+		}
+		
+		
+		#standby {
+			background:rgba(0,0,0,0.5);
+		}
+		#standby img {
+			position:absolute;
+			width:600px;
+			left:60px;
+			top:250px;
+		}
+		
+		#top {
+			position:fixed;
+			left:0px;
+			right:0px;
+			top:0px;
+			z-index:20;
+			height:70px;
+			text-align:center;
+			border-bottom:10px solid #000;
+			
+			background: rgb(168,40,40);
+			background: -moz-linear-gradient(top, rgba(168,40,40,1) 0%, rgba(168,40,40,1) 63%, rgba(150,35,35,1) 66%, rgba(150,35,35,1) 100%);
+			background: -webkit-linear-gradient(top, rgba(168,40,40,1) 0%,rgba(168,40,40,1) 63%,rgba(150,35,35,1) 66%,rgba(150,35,35,1) 100%);
+			background: linear-gradient(to bottom, rgba(168,40,40,1) 0%,rgba(168,40,40,1) 63%,rgba(150,35,35,1) 66%,rgba(150,35,35,1) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a82828', endColorstr='#962323',GradientType=0 );
+		}
+		#top img {
+			position:relative;
+			top:10px;
+			height:80px;
+		}
+		
+		#bottom {
+			position:fixed;
+			left:0px;
+			right:0px;
+			bottom:0px;
+			z-index:20;
+			height:40px;
+			
+			border-top:10px solid #000;
+		
+			background: rgb(247,247,247);
+			background: -moz-linear-gradient(top, rgba(247,247,247,1) 0%, rgba(237,237,237,1) 34%, rgba(255,255,255,1) 34%, rgba(255,255,255,1) 100%);
+			background: -webkit-linear-gradient(top, rgba(247,247,247,1) 0%,rgba(237,237,237,1) 34%,rgba(255,255,255,1) 34%,rgba(255,255,255,1) 100%);
+			background: linear-gradient(to bottom, rgba(247,247,247,1) 0%,rgba(237,237,237,1) 34%,rgba(255,255,255,1) 34%,rgba(255,255,255,1) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#ffffff',GradientType=0 );
+		}
+		
+		.hidden {
+			-webkit-filter:brightness(0.5);
+		}		
+		.hidden img {
+			opacity:0;
+		}
+		
+		</style>
+	</head>
+	<body>
+		<div id="top">
+			<img src="icebreaker_logo_text.png" alt="" />
+		</div>
+		<div id="bottom"></div>
+		<div id="main">
+			<div class="panel visible" id="player">
+				<div id="charbg1" class="charbg"></div>
+				<div id="charbg2" class="charbg"></div>
+				<div id="playername1" class="playername"><span>Liva</span></div>
+				<div id="playername2" class="playername"><span>MISTRRLOVE</span></div>
+				<div id="score">2</div>
+				<div id="casino_coins">0</div>
+			</div>
+			
+			
+			
+			<div class="panel " id="standby">
+				<img src="icebtran.png" alt="" />
+			</div>
+			
+		</div>
+	</body>
+</html>

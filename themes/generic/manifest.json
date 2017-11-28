@@ -1,0 +1,9 @@
+{"label":"Generic Layout","resolution":[1920,1080],"casters":2,
+"fields":[
+	{"name":"overlaytop","label":"Lower Third - Top override","type":"text","checkbox":true,"frontpage":true},
+	{"name":"overlaybottom","label":"Lower Third - Bottom override","type":"text","checkbox":true,"frontpage":true},
+	{"name":"staytuned_top","label":"Stay Tuned - Top Text","type":"text","checkbox":false,"frontpage":true},
+	{"name":"staytuned_bottom","label":"Stay Tuned - Bottom Text","type":"text","checkbox":false,"frontpage":true},
+	{"name":"countdown","label":"Stay Tuned - Countdown","type":"text","checkbox":true,"frontpage":true}
+],
+"note":"Generic layout for smaller productions","ver":"0.1","previewpath":"screenshot"}

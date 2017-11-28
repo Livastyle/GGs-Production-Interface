@@ -1,0 +1,140 @@
+@font-face {
+	font-family:BebasNeue;
+	src:url('BebasNeue.otf');
+}
+
+
+#main {
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:1280px;
+	height:720px;
+	font-family:BebasNeue;
+	
+}
+
+#fields {
+	position:absolute;
+	left:40px;
+	bottom:70px;
+	width:1200px;
+	display:flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-around;
+}
+
+@keyframes bganim {
+    from {background-position:100% 0%;}
+    to {background-position:0% 0%;}
+}
+
+
+.field {
+	position:relative;
+	display:none;
+	width:0px;
+	height:80px;
+	background: linear-gradient(90deg, rgba(11,11,11,1) 50%,rgba(1,1,1,1) 50.1%);	
+	background-size:30px 100%;
+	background-position:0% 0%;
+	border-left:15px solid #c52126;
+	border-right:15px solid #153d6f;
+
+	color:#fff;
+	transform:skew(20deg);
+	opacity:0;
+	
+    animation-name: bganim;
+    animation-duration: 14s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+	animation-play-state: paused;
+	box-shadow:1px 1px 6px #000;
+	
+	will-change:width;
+	
+	overflow:hidden;
+	
+	transition:opacity .5s, width .5s;
+}
+
+#main.visible .field {
+	width:270px;
+	opacity:1;
+	transition:opacity .4s .8s, width .5s 1s;
+	animation-play-state: running;
+}
+
+.field.visible {
+	display:block;
+}
+
+.field > .inner {
+	position:absolute;
+	left:0px;
+	width:270px;
+	top:0px;
+	bottom:0px;
+	background: linear-gradient(to bottom, rgba(61,61,61,0.48) 0%,rgba(61,61,61,0) 25%,rgba(61,61,61,0) 72%,rgba(61,61,61,0.52) 100%);
+}
+.field .name {
+	position:absolute;
+	left:10px;
+	right:10px;
+	top:0px;
+	line-height:50px;
+	font-size:30px;
+	vertical-align:middle;
+	text-align:center;
+}
+.field .name span {
+	display:inline-block;
+	transform:skew(-20deg);
+}
+.field .twitter {
+	position:absolute;
+	left:50px;
+	right:20px;
+	bottom:5px;
+	line-height:30px;
+	font-size:20px;
+	vertical-align:middle;
+	text-align:center;
+}
+.field .twitter span {
+	background-image:url('img/twitter.png');
+	background-size:20px auto;
+	background-position:0% 40%;
+	background-repeat:no-repeat;
+	padding-left:26px;
+	display:inline-block;
+	transform:skew(-20deg);
+}
+.field .flag {
+	position:absolute;
+	left:9px;
+	bottom:7px;
+	width:40px;
+	height:26px;
+	overflow:hidden;
+}
+.field .flag .inner {
+	position:absolute;
+	left:-5px;
+	bottom:0px;
+	right:-5px;
+	top:0px;
+	background-size:cover;
+	background-position:50%;
+	transform:skew(-20deg);
+}
+.field .flag .inner .fx {
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	background: linear-gradient(to bottom, rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.3) 6%,rgba(255,255,255,0.0) 70%);
+}

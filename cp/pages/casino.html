@@ -1,0 +1,22 @@
+<script type="text/javascript" src="js/casino.js"></script>
+
+<div>
+	<div>
+		<input type="text" value="www.ggs-casino.com:8082" id="casino-address" autocomplete="off" />
+		<input type="text" id="casino-username" value="geekygoonsquad" name="dontinsertanything_casinousername" placeholder="Username" autocomplete="false" />
+		<input type="password" value="" id="casino-accesskey" name="dontinsertanything_casinopassword" placeholder="Password" autocomplete="false" />
+	</div>
+	<div>
+		<button onclick="getCasinoAccessKey();">GET KEY</button>
+		<button onclick="connectCasino();">CONNECT TO CASINO</button>
+		<div id="casinoconnectionstatus"></div>
+	</div>
+</div>
+<div id="casino-main"></div>
+<div id="casino-select-winner-panel" class="modal">
+	<div>Who won the set?</div>
+	<div>
+		<button id="casino-select-winner-btn1" onclick="casinoSetWinner(1);hideModal();"></button>
+		<button id="casino-select-winner-btn2" onclick="casinoSetWinner(2);hideModal();"></button>
+	</div>
+</div>
